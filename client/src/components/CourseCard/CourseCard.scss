@@ -1,0 +1,38 @@
+.card {
+  background-color: rgb(42, 135, 172);
+  border-radius: 8rpx;
+  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+  margin: 36rpx 36rpx 36rpx;
+  padding: 30px;
+  transition: all 0.2s ease-out;
+  &:active {
+    opacity: 0.8;
+  }
+
+  .header,
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title {
+    font-size: 36rpx;
+    font-weight: 500;
+  }
+
+  .footer {
+    font-size: 30rpx;
+  }
+
+  .menu-icon {
+    font-size: 48rpx;
+    color: #fff;
+    padding: 16rpx;
+    margin: -16rpx;
+  }
+}

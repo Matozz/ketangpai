@@ -1,0 +1,39 @@
+.index {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.fab_btn {
+  position: fixed;
+  bottom: 50rpx;
+  right: 50rpx;
+}
+
+.options {
+  display: flex;
+  justify-content: space-around;
+  margin: 40rpx 30rpx 30rpx 30rpx;
+
+  .option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100rpx;
+    gap: 16rpx;
+    font-size: 30rpx;
+    transition: all 0.1s ease-out;
+    &:active {
+      opacity: 0.5;
+    }
+  }
+}
+
+.tab {
+  height: 100%;
+  .empty {
+    padding: 60rpx;
+    text-align: center;
+    color: #555555;
+  }
+}
