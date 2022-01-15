@@ -1,0 +1,20 @@
+.options {
+  display: flex;
+  justify-content: space-around;
+  margin: 40rpx 36rpx 30rpx 36rpx;
+
+  .option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100rpx;
+    gap: 16rpx;
+    font-size: 28rpx;
+    font-weight: 500;
+    transition: all 0.1s ease-out;
+    &:active {
+      opacity: 0.5;
+    }
+  }
+}

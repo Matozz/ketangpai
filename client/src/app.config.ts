@@ -17,22 +17,22 @@ export default {
     borderStyle: "black",
     list: [
       {
-        // selectedIconPath: "images/icon_consult_press.png",
-        // iconPath: "images/icon_consult.png",
-        pagePath: "pages/course/course",
-        text: "课程"
+        selectedIconPath: "images/tab_icon/course-filled.png",
+        iconPath: "images/tab_icon/course-outlined.png",
+        pagePath: "pages/course/course"
+        // text: "课程"
       },
       {
-        // selectedIconPath: "images/icon_consult_press.png",
-        // iconPath: "images/icon_consult.png",
-        pagePath: "pages/message/message",
-        text: "消息"
+        selectedIconPath: "images/tab_icon/message-filled.png",
+        iconPath: "images/tab_icon/message-outlined.png",
+        pagePath: "pages/message/message"
+        // text: "消息"
       },
       {
-        // selectedIconPath: "images/icon_mine_press.png",
-        // iconPath: "images/icon_mine.png",
-        pagePath: "pages/my/my",
-        text: "我的"
+        selectedIconPath: "images/tab_icon/my-filled.png",
+        iconPath: "images/tab_icon/my-outlined.png",
+        pagePath: "pages/my/my"
+        // text: "我的"
       }
     ]
   }

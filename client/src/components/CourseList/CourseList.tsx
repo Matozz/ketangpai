@@ -1,5 +1,6 @@
 import { ScrollView, View } from "@tarojs/components";
 import React, { useEffect, useState } from "react";
+import { AtDivider } from "taro-ui";
 import { CourseCard } from "..";
 import { getContainerHeight } from "../../utils";
 
@@ -41,7 +42,12 @@ const CourseList = () => {
       <CourseCard />
       <CourseCard />
       <CourseCard />
-      <View style={{ height: 40 }}></View>
+      <AtDivider
+        height={150}
+        content="没有更多了"
+        fontColor="#6190E8"
+        lineColor="#6190E8"
+      />
     </ScrollView>
   );
 };

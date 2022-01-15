@@ -6,14 +6,19 @@ import {
   useDidHide,
   usePullDownRefresh
 } from "@tarojs/taro";
-import { AtButton, AtFab, AtIcon, AtTabs, AtTabsPane } from "taro-ui";
+import { AtButton, AtFab, AtTabs, AtTabsPane } from "taro-ui";
 
 import "taro-ui/dist/style/components/button.scss"; // 按需引入
 import "./course.scss";
 import Taro from "@tarojs/taro";
-import { CourseList } from "../../components";
+import { CourseList, OptionsBar } from "../../components";
 
 const tabList = [{ title: "我教的课" }, { title: "我听的课" }];
+const options = [
+  { title: "课件库", icon: "file-code" },
+  { title: "试卷库", icon: "folder" },
+  { title: "收藏", icon: "heart" }
+];
 
 const Course = () => {
   const [current, setCurrent] = useState(0);
@@ -47,20 +52,7 @@ const Course = () => {
 
   return (
     <View className="index">
-      <View className="options">
-        <View className="option">
-          <AtIcon value="file-code" size="30" color="#6190E8"></AtIcon>
-          <Text>课件库</Text>
-        </View>
-        <View className="option">
-          <AtIcon value="folder" size="30" color="#6190E8"></AtIcon>
-          <Text>试卷库</Text>
-        </View>
-        <View className="option">
-          <AtIcon value="heart" size="30" color="#6190E8"></AtIcon>
-          <Text>收藏</Text>
-        </View>
-      </View>
+      <OptionsBar options={options} />
       <AtTabs
         current={current}
         tabList={tabList}
