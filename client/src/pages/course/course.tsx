@@ -8,7 +8,6 @@ import {
 } from "@tarojs/taro";
 import { AtButton, AtFab, AtTabs, AtTabsPane } from "taro-ui";
 
-import "taro-ui/dist/style/components/button.scss"; // 按需引入
 import "./course.scss";
 import Taro from "@tarojs/taro";
 import { CourseList, OptionsBar } from "../../components";

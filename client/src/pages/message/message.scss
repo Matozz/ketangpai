@@ -1,0 +1,15 @@
+.message {
+  height: 100vh;
+  .tabs {
+    height: 100%;
+    overflow: hidden;
+    .tab {
+      height: 100%;
+      .empty {
+        padding: 60px;
+        text-align: center;
+        color: #555555;
+      }
+    }
+  }
+}

@@ -2,10 +2,12 @@
 @import "~taro-ui/dist/style/components/tabs.scss";
 @import "~taro-ui/dist/style/components/fab.scss";
 @import "~taro-ui/dist/style/components/divider.scss";
+@import "~taro-ui/dist/style/components/list.scss";
+@import "taro-ui/dist/style/components/button.scss";
 
 .at-tabs__item {
   font-weight: 500;
-  font-size: 30rpx;
+  font-size: 30px;
 }
 
 .at-tabs__body {
@@ -27,14 +29,28 @@
 }
 
 .at-divider {
-  margin: 0 36rpx;
+  margin: 0 36px;
   width: initial;
   .at-divider__content {
-    font-size: 28rpx;
+    font-size: 28px;
   }
 }
 
 .at-tabs__item-underline {
-  margin: 0 36rpx;
-  width: calc(100% - 72rpx);
+  margin: 0 36px;
+  width: calc(100% - 72px);
+}
+
+.at-list__item {
+  padding: 32px 36px;
+  .item-extra {
+    display: flex;
+    .item-extra__info {
+      padding-right: 40px;
+      font-size: 30px;
+    }
+  }
+  &::after {
+    left: 36px;
+  }
 }

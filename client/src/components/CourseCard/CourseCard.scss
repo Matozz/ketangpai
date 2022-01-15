@@ -1,12 +1,12 @@
 .card {
   background-color: rgb(42, 135, 172);
-  border-radius: 8rpx;
-  height: 200rpx;
+  border-radius: 8px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   color: white;
-  margin: 36rpx 36rpx 0 36rpx;
+  margin: 36px 36px 0 36px;
   padding: 30px;
   transition: all 0.2s ease-out;
   &:active {
@@ -21,18 +21,18 @@
   }
 
   .title {
-    font-size: 36rpx;
+    font-size: 36px;
     font-weight: 500;
   }
 
   .footer {
-    font-size: 30rpx;
+    font-size: 30px;
   }
 
   .menu-icon {
-    font-size: 48rpx;
+    font-size: 48px;
     color: #fff;
-    padding: 16rpx;
-    margin: -16rpx;
+    padding: 16px;
+    margin: -16px;
   }
 }
