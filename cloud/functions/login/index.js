@@ -30,7 +30,7 @@ exports.main = async (event, context) => {
       _openid: wxContext.OPENID,
     })
     .get()
-    .then(({
+    .then(async ({
       data
     }) => {
       if (data.length <= 0 && method === 'auth') {
@@ -38,28 +38,23 @@ exports.main = async (event, context) => {
           ...user,
           _openid: wxContext.OPENID,
           phoneNum: "",
-          type: 0,
           createTime: new db.serverDate(),
         };
-        return db.collection("users").add({
+        await db.collection("users").add({
           data: newUser,
-        });
+        }).then((res) => {
+          console.log(res);
+          status = "USER CREATED";
+          userInfo = user;
+        })
       } else if (data.length > 0) {
         status = "USER EXSIST";
         userInfo = data[0];
-        return
       } else {
         status = "USER NOT FOUND";
-        return
       }
     })
-    .then((res) => {
-      if (res) {
-        console.log(res);
-        status = "USER CREATED";
-        userInfo = user;
-      }
-    })
+
     .catch((err) => {
       console.log(err);
     });

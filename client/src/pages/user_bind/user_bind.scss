@@ -1,0 +1,36 @@
+.userbind {
+  .at-input--disabled {
+    opacity: 1;
+  }
+  .at-list {
+    .at-list__item {
+      margin-left: 36px;
+      padding: 24px 0;
+      &::after {
+        left: 0;
+      }
+      .at-list__item-content {
+        flex: initial;
+        margin-right: 16px;
+        width: 100px;
+      }
+      .at-list__item-extra {
+        max-width: initial;
+      }
+      .item-extra__info {
+        color: #000;
+        font-size: 32px;
+      }
+    }
+    .item-placeholder .item-extra__info {
+      color: #cecece;
+    }
+    &::after {
+      display: none;
+    }
+  }
+
+  .submit_btn {
+    margin: 36px;
+  }
+}

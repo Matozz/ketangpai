@@ -1,7 +1,7 @@
 import { Image, Text, View } from "@tarojs/components";
 import Taro, { useDidShow } from "@tarojs/taro";
 import React, { useState } from "react";
-import { AtButton, AtList, AtListItem } from "taro-ui";
+import { AtButton, AtList, AtListItem, AtTag } from "taro-ui";
 import { DefaultValue } from "../../data/default";
 import { setGlobalData, getGlobalData } from "../../data/global";
 
@@ -11,14 +11,19 @@ interface UserInfo {
   avatarUrl: string;
   nickName: string;
   realName: string;
+  school: string;
+  uid: string;
+  type: number;
 }
 
 const My = () => {
   const [userInfo, setUserInfo] = useState<Partial<UserInfo>>({});
   const [isAuthed, setIsAuthed] = useState(false);
+  const [isBinded, setIsBinded] = useState(false);
 
   useDidShow(() => {
     if (getGlobalData("USERINFO")) {
+      setIsBinded(!!getGlobalData("USERINFO").uid);
       setIsAuthed(true);
       setUserInfo(getGlobalData("USERINFO"));
     }
@@ -53,7 +58,7 @@ const My = () => {
             Taro.showToast({
               title: "登录失败",
               icon: "none",
-              duration: 2000
+              duration: 1500
             });
           });
       })
@@ -61,13 +66,27 @@ const My = () => {
         Taro.showToast({
           title: "授权以创建用户",
           icon: "none",
-          duration: 2000
+          duration: 1500
         });
         console.log(err);
       });
   };
 
   const editProfile = () => {};
+
+  const nagivate = (path: string) => () => {
+    if (isAuthed) {
+      Taro.navigateTo({
+        url: `/pages/${path}/${path}`
+      });
+    } else {
+      Taro.showToast({
+        title: "授权登录以继续",
+        icon: "none",
+        duration: 1500
+      });
+    }
+  };
 
   return (
     <View>
@@ -83,13 +102,18 @@ const My = () => {
             src={isAuthed ? userInfo?.avatarUrl : DefaultValue.AvatarUrl}
           />
         </View>
-        <AtButton
-          type="secondary"
-          size="small"
-          onClick={isAuthed ? () => {} : login}
-        >
-          {isAuthed ? "编辑个人资料" : "授权登录"}
-        </AtButton>
+        <View className="footer">
+          <AtButton
+            type="secondary"
+            size="small"
+            onClick={isAuthed ? () => {} : login}
+          >
+            {isAuthed ? "编辑个人资料" : "授权登录"}
+          </AtButton>
+          {isBinded && (
+            <AtTag size="small">{userInfo.type == 0 ? "学生" : "教师"}</AtTag>
+          )}
+        </View>
       </View>
 
       <AtList>
@@ -111,6 +135,8 @@ const My = () => {
         <AtListItem
           title="身份绑定"
           arrow="right"
+          extraText={userInfo?.school}
+          onClick={nagivate("user_bind")}
           iconInfo={{ size: 25, color: "#6190E8", value: "user" }}
         />
         <AtListItem

@@ -4,6 +4,9 @@
 @import "~taro-ui/dist/style/components/divider.scss";
 @import "~taro-ui/dist/style/components/list.scss";
 @import "taro-ui/dist/style/components/button.scss";
+@import "~taro-ui/dist/style/components/form.scss";
+@import "~taro-ui/dist/style/components/input.scss";
+@import "~taro-ui/dist/style/components/tag.scss";
 
 .at-tabs__item {
   font-weight: 500;
@@ -53,4 +56,19 @@
   &::after {
     left: 36px;
   }
+}
+
+.at-input {
+  margin-left: 36px;
+}
+.at-input__title {
+  width: 100px;
+}
+
+.at-tag--small {
+  padding: 0 16px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
 }

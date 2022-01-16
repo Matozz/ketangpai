@@ -3,7 +3,8 @@ export default {
     "pages/course/course",
     "pages/my/my",
     "pages/message/message",
-    "pages/course_overview/course_overview"
+    "pages/course_overview/course_overview",
+    "pages/user_bind/user_bind"
   ],
   window: {
     backgroundTextStyle: "light",
