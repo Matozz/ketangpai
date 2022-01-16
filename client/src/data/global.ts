@@ -1,4 +1,7 @@
-const globalData = {};
+const globalData = {
+  USERINFO: null,
+  BINDED: null
+};
 
 const set = (key: any, val: any) => {
   globalData[key] = val;

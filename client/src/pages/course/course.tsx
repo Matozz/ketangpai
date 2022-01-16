@@ -14,7 +14,7 @@ import { CourseList, OptionsBar } from "../../components";
 
 const tabList = [{ title: "我教的课" }, { title: "我听的课" }];
 const options = [
-  { title: "课件库", icon: "file-code" },
+  { title: "课件库", icon: "file-code", path: "courseware" },
   { title: "试卷库", icon: "folder" },
   { title: "收藏", icon: "heart" }
 ];

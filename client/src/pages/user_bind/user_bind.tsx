@@ -15,7 +15,7 @@ const UserBind = () => {
   const [isBinded, setIsBinded] = useState(false);
 
   useDidShow(() => {
-    if (getGlobalData("USERINFO")?.uid) {
+    if (getGlobalData("BIND")) {
       setIsBinded(true);
       setUid(getGlobalData("USERINFO").uid);
     }
@@ -57,6 +57,7 @@ const UserBind = () => {
             duration: 1500
           });
           setGlobalData("USERINFO", userInfo);
+          setGlobalData("BIND", method == "bind");
           setTimeout(() => {
             Taro.navigateBack({ delta: 1 });
           }, 1500);

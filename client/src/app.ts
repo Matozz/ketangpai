@@ -27,6 +27,7 @@ class App extends Component {
         console.log(result);
 
         setGlobalData("USERINFO", result.userInfo);
+        setGlobalData("BIND", !!result.userInfo?.uid);
       })
       .catch(err => {
         console.log(err);

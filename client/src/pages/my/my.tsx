@@ -23,7 +23,7 @@ const My = () => {
 
   useDidShow(() => {
     if (getGlobalData("USERINFO")) {
-      setIsBinded(!!getGlobalData("USERINFO").uid);
+      setIsBinded(getGlobalData("BIND"));
       setIsAuthed(true);
       setUserInfo(getGlobalData("USERINFO"));
     }
@@ -74,7 +74,7 @@ const My = () => {
 
   const editProfile = () => {};
 
-  const nagivate = (path: string) => () => {
+  const handleNavigate = (path: string) => () => {
     if (isAuthed) {
       Taro.navigateTo({
         url: `/pages/${path}/${path}`
@@ -120,6 +120,7 @@ const My = () => {
         <AtListItem
           title="我的课件库"
           arrow="right"
+          onClick={handleNavigate("courseware")}
           iconInfo={{ size: 25, color: "#6190E8", value: "file-code" }}
         />
         <AtListItem
@@ -136,7 +137,7 @@ const My = () => {
           title="身份绑定"
           arrow="right"
           extraText={userInfo?.school}
-          onClick={nagivate("user_bind")}
+          onClick={handleNavigate("user_bind")}
           iconInfo={{ size: 25, color: "#6190E8", value: "user" }}
         />
         <AtListItem

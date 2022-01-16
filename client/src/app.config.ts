@@ -4,7 +4,8 @@ export default {
     "pages/my/my",
     "pages/message/message",
     "pages/course_overview/course_overview",
-    "pages/user_bind/user_bind"
+    "pages/user_bind/user_bind",
+    "pages/courseware/courseware"
   ],
   window: {
     backgroundTextStyle: "light",
