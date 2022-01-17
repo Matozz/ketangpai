@@ -8,6 +8,10 @@
 @import "~taro-ui/dist/style/components/input.scss";
 @import "~taro-ui/dist/style/components/tag.scss";
 @import "~taro-ui/dist/style/components/card.scss";
+@import "~taro-ui/dist/style/components/activity-indicator.scss";
+@import "~taro-ui/dist/style/components/loading.scss";
+@import "~taro-ui/dist/style/components/noticebar.scss";
+@import "~taro-ui/dist/style/components/modal.scss";
 
 .at-tabs__item {
   font-weight: 500;
@@ -72,4 +76,8 @@
   display: flex;
   align-items: center;
   font-size: 24px;
+}
+
+.at-loading__ring {
+  border-width: 4px;
 }

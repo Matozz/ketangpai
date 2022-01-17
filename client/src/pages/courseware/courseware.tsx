@@ -1,11 +1,18 @@
 import { Text, View } from "@tarojs/components";
-import Taro from "@tarojs/taro";
-import React, { useCallback, useState } from "react";
-import { AtButton, AtCard, AtTabs, AtTabsPane } from "taro-ui";
+import Taro, { usePullDownRefresh } from "@tarojs/taro";
+import React from "react";
+import { AtCard } from "taro-ui";
 
 import "./courseware.scss";
 
 const Courseware = () => {
+  usePullDownRefresh(() => {
+    console.log("onPullDownRefresh");
+    setTimeout(() => {
+      Taro.stopPullDownRefresh();
+    }, 1500);
+  });
+
   const handleClickFileCard = () => {
     Taro.showLoading({ title: "文件加载中" });
     Taro.cloud.downloadFile({

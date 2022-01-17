@@ -1,7 +1,7 @@
 import { Text, View } from "@tarojs/components";
 import Taro, { getCurrentInstance, useDidShow, useReady } from "@tarojs/taro";
 import React, { useCallback, useState } from "react";
-import { AtDivider, AtIcon, AtTabs, AtTabsPane } from "taro-ui";
+import { AtDivider, AtTabs, AtTabsPane } from "taro-ui";
 import { CourseList, OptionsBar } from "../../components";
 
 import "./course_overview.scss";
@@ -15,24 +15,21 @@ const tabList = [
 ];
 const options = [
   { title: "成员", icon: "user" },
-  { title: "试卷库", icon: "folder" },
+  { title: "课件库", icon: "folder" },
   { title: "分析", icon: "analytics" },
   { title: "设置", icon: "settings" }
 ];
 
 const CourseOverview = () => {
-  const [params, setParams] = useState({});
+  const [params, setParams] = useState<any>({});
   const [current, setCurrent] = useState(0);
+  const [cid, setCid] = useState("");
 
   useReady(() => {
-    setParams(getCurrentInstance().router.params);
-    Taro.showNavigationBarLoading();
+    let { _cid, name, desc, type } = getCurrentInstance().router.params;
+    setParams({ cid, name, desc, type });
 
-    // Database
-    setTimeout(() => {
-      Taro.setNavigationBarTitle({ title: "科技文献检索实践" });
-      Taro.hideNavigationBarLoading();
-    }, 500);
+    Taro.setNavigationBarTitle({ title: name });
   });
 
   useDidShow(() => {});
@@ -43,8 +40,8 @@ const CourseOverview = () => {
     <View className="overview">
       <View className="top">
         <View className="header">
-          <Text className="title">科技文献检索实践</Text>
-          <Text className="desc">18信计</Text>
+          <Text className="title">{params.name}</Text>
+          <Text className="desc">{params.desc}</Text>
         </View>
         <AtDivider lineColor="#EEEEEE" height={30} />
 

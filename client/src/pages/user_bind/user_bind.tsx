@@ -1,7 +1,7 @@
-import { Picker, Text, View } from "@tarojs/components";
+import { Picker, View } from "@tarojs/components";
 import Taro, { useDidShow } from "@tarojs/taro";
 import React, { useState } from "react";
-import { AtButton, AtForm, AtInput, AtList, AtListItem } from "taro-ui";
+import { AtButton, AtInput, AtList, AtListItem } from "taro-ui";
 import { getGlobalData, setGlobalData } from "../../data/global";
 
 import "./user_bind.scss";
@@ -58,8 +58,9 @@ const UserBind = () => {
           });
           setGlobalData("USERINFO", userInfo);
           setGlobalData("BIND", method == "bind");
-          setTimeout(() => {
+          let timer = setTimeout(() => {
             Taro.navigateBack({ delta: 1 });
+            clearTimeout(timer);
           }, 1500);
         } else {
           Taro.hideLoading();

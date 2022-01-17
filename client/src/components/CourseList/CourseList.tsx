@@ -2,17 +2,19 @@ import { ScrollView, View } from "@tarojs/components";
 import React, { useEffect, useState } from "react";
 import { AtDivider } from "taro-ui";
 import { CourseCard } from "..";
+import course from "../../pages/course/course";
 import { getContainerHeight } from "../../utils";
 
 import "./CourseList.scss";
 
-const CourseList = () => {
+const CourseList = ({ items }: { items?: any }) => {
   const [height, setHeight] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
+    let timer = setTimeout(() => {
       getContainerHeight().then(res => setHeight(res));
+      clearTimeout(timer);
     }, 100);
   }, []);
 
@@ -37,17 +39,24 @@ const CourseList = () => {
       refresherTriggered={refreshing}
       onRefresherRefresh={handleRefresh}
     >
-      <CourseCard />
-      <CourseCard />
-      <CourseCard />
-      <CourseCard />
-      <CourseCard />
-      <AtDivider
+      {items.map(({ cid, type, user, class: _class }, index) => (
+        <CourseCard
+          name={_class.name}
+          desc={_class.desc}
+          teacher={user?.realName ?? user.nickName}
+          premium={_class.premium}
+          avatarUrl={user.avatarUrl}
+          cid={cid}
+          type={type}
+          options
+        />
+      ))}
+      {/* <AtDivider
         height={150}
         content="没有更多了"
         fontColor="#6190E8"
         lineColor="#6190E8"
-      />
+      /> */}
     </ScrollView>
   );
 };

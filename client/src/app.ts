@@ -15,23 +15,6 @@ class App extends Component {
         env: "cloud1-7gweoaho6f4398d8"
       });
     }
-
-    Taro.cloud
-      .callFunction({
-        name: "login",
-        data: {
-          method: "check"
-        }
-      })
-      .then(({ result }: any) => {
-        console.log(result);
-
-        setGlobalData("USERINFO", result.userInfo);
-        setGlobalData("BIND", !!result.userInfo?.uid);
-      })
-      .catch(err => {
-        console.log(err);
-      });
   }
 
   componentDidShow() {}

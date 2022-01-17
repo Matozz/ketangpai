@@ -5,7 +5,8 @@ export default {
     "pages/message/message",
     "pages/course_overview/course_overview",
     "pages/user_bind/user_bind",
-    "pages/courseware/courseware"
+    "pages/courseware/courseware",
+    "pages/course_create/course_create"
   ],
   window: {
     backgroundTextStyle: "light",

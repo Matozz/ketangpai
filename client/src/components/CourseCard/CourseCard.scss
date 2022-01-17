@@ -1,5 +1,5 @@
 .card {
-  background-color: rgb(42, 135, 172);
+  background-color: rgb(24, 124, 163);
   border-radius: 8px;
   height: 200px;
   display: flex;
@@ -25,8 +25,20 @@
     font-weight: 500;
   }
 
+  .premium {
+    margin-left: 10px;
+    margin-top: 2px;
+    flex: 1;
+  }
+
   .footer {
     font-size: 30px;
+    .desc {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-right: 40rpx;
+      overflow: hidden;
+    }
   }
 
   .menu-icon {
@@ -34,5 +46,16 @@
     color: #fff;
     padding: 16px;
     margin: -16px;
+  }
+
+  .teacher {
+    display: flex;
+    align-items: center;
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 100%;
+      margin-left: 16px;
+    }
   }
 }

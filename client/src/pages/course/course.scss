@@ -1,6 +1,13 @@
 .index {
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .loading {
+    flex: 1;
+    display: flex;
+  }
 }
 
 .fab_btn {
@@ -16,4 +23,9 @@
     text-align: center;
     color: #555555;
   }
+}
+
+.at-input {
+  margin-left: 16px;
+  margin-right: 16px;
 }

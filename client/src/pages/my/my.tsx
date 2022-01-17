@@ -4,17 +4,9 @@ import React, { useState } from "react";
 import { AtButton, AtList, AtListItem, AtTag } from "taro-ui";
 import { DefaultValue } from "../../data/default";
 import { setGlobalData, getGlobalData } from "../../data/global";
+import { UserInfo } from "../../types/type";
 
 import "./my.scss";
-
-interface UserInfo {
-  avatarUrl: string;
-  nickName: string;
-  realName: string;
-  school: string;
-  uid: string;
-  type: number;
-}
 
 const My = () => {
   const [userInfo, setUserInfo] = useState<Partial<UserInfo>>({});
