@@ -23,7 +23,7 @@ const Course = () => {
   const [techList, setTechList] = useState([]);
   const [learnList, setLearnList] = useState([]);
   const [isLoading, setIsloading] = useState(true);
-  const [isBinded, setIsBinded] = useState<boolean>();
+  const [uid, setUid] = useState("");
 
   const loadPage = () => {
     return new Promise((resolve, reject) => {
@@ -31,7 +31,7 @@ const Course = () => {
       login(
         ({ userInfo, isBinded }) => {
           setCurrent(isBinded && !userInfo.type ? 1 : 0);
-          setIsBinded(isBinded);
+          setUid(userInfo?.uid ?? "");
           resolve(userInfo);
           let timer = setTimeout(() => {
             setIsloading(false);
@@ -89,7 +89,9 @@ const Course = () => {
   });
 
   useDidShow(() => {
-    if (isBinded !== getGlobalData("BIND")) {
+    setUid(getGlobalData("USERINFO")?.uid ?? "");
+
+    if ((getGlobalData("USERINFO")?.uid ?? "") !== uid) {
       loadPage();
       loadCourseList(getGlobalData("USERINFO"));
     }
