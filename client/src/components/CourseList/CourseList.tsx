@@ -7,7 +7,13 @@ import { getContainerHeight } from "../../utils";
 
 import "./CourseList.scss";
 
-const CourseList = ({ items }: { items?: any }) => {
+const CourseList = ({
+  items,
+  onRefresh
+}: {
+  items?: any;
+  onRefresh?: () => Promise<unknown>;
+}) => {
   const [height, setHeight] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -18,13 +24,10 @@ const CourseList = ({ items }: { items?: any }) => {
     }, 100);
   }, []);
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setRefreshing(true);
-    console.log("Refreshing");
-
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
+    await onRefresh();
+    setRefreshing(false);
   };
 
   return (

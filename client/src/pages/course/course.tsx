@@ -1,24 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { View, Text, Button } from "@tarojs/components";
 import { useReady, useDidShow, useDidHide } from "@tarojs/taro";
-import {
-  AtActivityIndicator,
-  AtFab,
-  AtFloatLayout,
-  AtInput,
-  AtModal,
-  AtModalAction,
-  AtModalContent,
-  AtModalHeader,
-  AtTabs,
-  AtTabsPane
-} from "taro-ui";
+import { AtActivityIndicator, AtFab, AtTabs, AtTabsPane } from "taro-ui";
 
 import "./course.scss";
 import Taro from "@tarojs/taro";
 import { CourseList, OptionsBar } from "../../components";
 import { getGlobalData } from "../../data/global";
 import login from "../../db/login";
+
+declare let wx: any;
 
 const tabList = [{ title: "我教的课" }, { title: "我听的课" }];
 const options = [
@@ -33,9 +24,6 @@ const Course = () => {
   const [learnList, setLearnList] = useState([]);
   const [isLoading, setIsloading] = useState(true);
   const [isBinded, setIsBinded] = useState<boolean>();
-  const [showModal, setShowModal] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [focus, setFocus] = useState(false);
 
   const loadPage = () => {
     return new Promise((resolve, reject) => {
@@ -56,28 +44,32 @@ const Course = () => {
   };
 
   const loadCourseList = userInfo => {
-    Taro.cloud
-      .callFunction({
-        name: "get_course",
-        data: {
-          uid: userInfo?.uid ?? null
-        }
-      })
-      .then(({ result: { statusCode, learnList, techList } }: any) => {
-        console.log({ statusCode, learnList, techList });
-        if (statusCode === 200) {
-          setTechList(techList);
-          setLearnList(learnList);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        Taro.showToast({
-          title: "课程信息请求失败",
-          icon: "none",
-          duration: 2000
+    return new Promise((resolve, reject) => {
+      Taro.cloud
+        .callFunction({
+          name: "get_course",
+          data: {
+            uid: userInfo?.uid ?? null
+          }
+        })
+        .then(({ result: { statusCode, learnList, techList } }: any) => {
+          console.log({ statusCode, learnList, techList });
+          if (statusCode === 200) {
+            setTechList(techList);
+            setLearnList(learnList);
+            resolve(null);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          reject(err);
+          Taro.showToast({
+            title: "课程信息请求失败",
+            icon: "none",
+            duration: 2000
+          });
         });
-      });
+    });
   };
 
   useEffect(() => {});
@@ -99,8 +91,6 @@ const Course = () => {
   useDidShow(() => {
     if (isBinded !== getGlobalData("BIND")) {
       loadPage();
-    }
-    if (getGlobalData("USERINFO")) {
       loadCourseList(getGlobalData("USERINFO"));
     }
   });
@@ -108,6 +98,10 @@ const Course = () => {
   useDidHide(() => {});
 
   const handleTabClick = useCallback(value => setCurrent(value), [current]);
+
+  const handleJoinCourse = res => {
+    console.log({ cid: res.content });
+  };
 
   const handleFabClick = () =>
     Taro.showActionSheet({
@@ -119,57 +113,33 @@ const Course = () => {
             url: "/pages/course_create/course_create"
           });
         } else {
-          setShowModal(true);
-          let timer = setTimeout(() => {
-            setFocus(true);
-            clearTimeout(timer);
-          }, 300);
+          // Wechat miniprogram scope!!!
+          wx.showModal({
+            title: "加入课程",
+            editable: true,
+            placeholderText: "请输入课程码",
+            confirmText: "加入",
+            success: function(res) {
+              if (res.confirm) {
+                handleJoinCourse(res);
+              } else if (res.cancel) {
+                console.log("用户点击取消");
+              }
+            }
+          });
         }
       })
       .catch(res => {
         console.log(res.errMsg);
       });
 
-  const handleModalClose = () => {
-    setInputValue("");
-    setShowModal(false);
-    setFocus(false);
-  };
-
-  const handleInputChange = (value: any) => {
-    setInputValue(value);
-  };
-
-  const handleJoinCourse = () => {
-    console.log({ cid: inputValue });
+  const handleListRefresh = async () => {
+    await loadCourseList(getGlobalData("USERINFO"));
   };
 
   return (
     <View className="index">
       <OptionsBar options={options} />
-
-      <AtModal isOpened={showModal} onClose={handleModalClose}>
-        <AtModalHeader>加入课程</AtModalHeader>
-        <AtModalContent>
-          {showModal && (
-            <AtInput
-              name="cid"
-              type="text"
-              placeholder="请输入课程码"
-              value={inputValue}
-              placeholderStyle="color:#cecece"
-              onChange={handleInputChange}
-              focus={focus}
-            />
-          )}
-        </AtModalContent>
-        <AtModalAction>
-          <Button onClick={handleModalClose}>取消</Button>
-          <Button disabled={inputValue == ""} onClick={handleJoinCourse}>
-            确定
-          </Button>
-        </AtModalAction>
-      </AtModal>
 
       {isLoading ? (
         <View className="loading">
@@ -186,7 +156,7 @@ const Course = () => {
               {techList.length === 0 ? (
                 <View className="empty">点击 + 按钮创建课程</View>
               ) : (
-                <CourseList items={techList} />
+                <CourseList items={techList} onRefresh={handleListRefresh} />
               )}
             </View>
           </AtTabsPane>
