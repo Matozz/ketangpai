@@ -1,14 +1,7 @@
 import { Picker, Text, View } from "@tarojs/components";
 import Taro, { getCurrentInstance, useReady } from "@tarojs/taro";
-import React, { useCallback, useState } from "react";
-import {
-  AtButton,
-  AtIcon,
-  AtList,
-  AtListItem,
-  AtTabs,
-  AtTabsPane
-} from "taro-ui";
+import React, { useState } from "react";
+import { AtButton, AtIcon, AtList, AtListItem } from "taro-ui";
 
 import "./member.scss";
 
@@ -16,13 +9,45 @@ declare let wx: any;
 
 const Member = () => {
   const [params, setParams] = useState<any>({});
+  const [teacher, setTeacher] = useState([]);
+  const [studentList, setStudentList] = useState([]);
   const [classList, setClassList] = useState([
     { name: "18信计", classid: "5b049cc861e7dd960706ded42845f3f3" }
   ]);
 
+  const loadMembers = (cid: string, premium: string) => {
+    Taro.showLoading({ title: "加载中" });
+    Taro.cloud
+      .callFunction({
+        name: "get_member",
+        data: {
+          cid,
+          premium
+        }
+      })
+      .then(({ result: { statusCode, teacher, studentList } }: any) => {
+        console.log({ statusCode, teacher, studentList });
+        if (statusCode === 200) {
+          setTeacher(teacher);
+          setStudentList(studentList);
+          Taro.hideLoading();
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        Taro.hideLoading();
+        Taro.showToast({
+          title: "成员信息请求失败",
+          icon: "none",
+          duration: 1500
+        });
+      });
+  };
+
   useReady(() => {
     let { cid, type, premium } = getCurrentInstance().router.params;
     setParams({ cid, type, premium });
+    loadMembers(cid, premium);
   });
 
   const handlePickerChange = e => {
@@ -63,7 +88,7 @@ const Member = () => {
 
   return (
     <View className="member">
-      {params.type && params.premium && (
+      {params.type == 1 && params.premium == 1 && (
         <View className="header">
           <Picker
             mode="selector"
@@ -86,9 +111,23 @@ const Member = () => {
         </View>
       )}
 
-      {[1, 2, 3].map(() => (
+      <Text className="title">教师</Text>
+      {teacher.map(({ user }) => (
         <AtList>
-          <AtListItem title="学生" />
+          <AtListItem
+            title={user?.realName ?? user.nickName}
+            extraText={user.uid}
+          />
+        </AtList>
+      ))}
+
+      <Text className="title">学生</Text>
+      {studentList.map(({ user }) => (
+        <AtList>
+          <AtListItem
+            title={user?.realName ?? user.nickName}
+            extraText={user?.uid}
+          />
         </AtList>
       ))}
     </View>

@@ -38,11 +38,20 @@ const My = () => {
             }
           })
           .then(({ result }: any) => {
-            console.log(result);
-            setUserInfo(result.userInfo);
-            setGlobalData("USERINFO", result.userInfo);
-            setIsAuthed(true);
-            Taro.hideLoading();
+            if (!result.statusCode) {
+              Taro.hideLoading();
+              Taro.showToast({
+                title: "服务器开小差了，请稍后重试",
+                icon: "none",
+                duration: 2000
+              });
+            } else {
+              console.log(result);
+              setUserInfo(result.userInfo);
+              setGlobalData("USERINFO", result.userInfo);
+              setIsAuthed(true);
+              Taro.hideLoading();
+            }
           })
           .catch(err => {
             console.log(err);

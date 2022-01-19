@@ -49,12 +49,12 @@ exports.main = async (event, context) => {
           userInfo = user;
         })
       } else if (data.length > 0) {
-        statusCode = 403;
-        status = "USER EXSIST";
+        statusCode = 200;
+        message = "USER EXSIST";
         userInfo = data[0];
       } else {
         statusCode = 403;
-        status = "USER NOT FOUND";
+        message = "USER NOT FOUND";
       }
     })
 

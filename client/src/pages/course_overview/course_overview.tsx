@@ -49,7 +49,11 @@ const CourseOverview = () => {
       icon: "user",
       path: `/pages/member/member?cid=${params.cid}&type=${params.type}&premium=${params.premium}`
     },
-    { title: "课件库", icon: "folder" },
+    {
+      title: "课件库",
+      icon: "folder",
+      path: `/pages/courseware/courseware?cid=${params.cid}`
+    },
     { title: "分析", icon: "analytics" },
     { title: "设置", icon: "settings" }
   ];

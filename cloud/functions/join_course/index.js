@@ -67,6 +67,8 @@ exports.main = async (event, context) => {
         message = '课程不存在'
       }
     })
+  } else if (method == 'byUid') {
+    
   } else if (method == 'byGroup') {
 
   }

@@ -67,7 +67,7 @@ exports.main = async (event, context) => {
       .end()
       .then(({ list }) => {
         if (list.length > 0) {
-          console.log(list);
+          // console.log(list);
           techList = list.filter((item) => item.type == 1);
           learnList = list.filter((item) => item.type == 0);
         }
@@ -137,7 +137,7 @@ exports.main = async (event, context) => {
       .end()
       .then(({ list }) => {
         if (list.length > 0) {
-          console.log(list);
+          // console.log(list);
           techList = [...techList, ...list.filter((item) => item.type == 1)];
           learnList = [...learnList, ...list.filter((item) => item.type == 0)];
         }
@@ -207,7 +207,7 @@ exports.main = async (event, context) => {
       .end()
       .then(({ list }) => {
         if (list.length > 0) {
-          console.log(list);
+          // console.log(list);
           techList = list.filter((item) => item.type == 1);
           learnList = list.filter((item) => item.type == 0);
         }
