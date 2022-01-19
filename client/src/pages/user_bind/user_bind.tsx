@@ -47,12 +47,12 @@ const UserBind = () => {
           }
         }
       })
-      .then(({ result: { statusCode, userInfo } }: any) => {
-        console.log({ statusCode, userInfo });
+      .then(({ result: { statusCode, message, userInfo } }: any) => {
+        console.log({ statusCode, message, userInfo });
         if (statusCode == 200) {
           Taro.hideLoading();
           Taro.showToast({
-            title: method == "bind" ? "绑定成功" : "解绑成功",
+            title: message,
             icon: "success",
             duration: 1500
           });
@@ -65,7 +65,7 @@ const UserBind = () => {
         } else {
           Taro.hideLoading();
           Taro.showToast({
-            title: method == "bind" ? "绑定失败" : "解绑失败",
+            title: message,
             icon: "none",
             duration: 1500
           });

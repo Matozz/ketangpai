@@ -27,7 +27,7 @@ exports.main = async (event, context) => {
     data
   }) => {
     if (data.length > 0) {
-      message = 'CID EXSIST'
+      message = '课程码已存在，已生成新的课程码'
       statusCode = 403
     } else {
       await db.collection("classes").add({
@@ -50,7 +50,7 @@ exports.main = async (event, context) => {
         }
       })
 
-      message = 'COURSE CREATED'
+      message = '课程创建成功'
       statusCode = 200
     }
   })

@@ -19,7 +19,9 @@ const CourseCard = ({
 }: CourseCardProps) => {
   const handleCourseClick = () => {
     Taro.navigateTo({
-      url: `/pages/course_overview/course_overview?cid=${cid}&name=${name}&desc=${desc}&type=${type}`
+      url: `/pages/course_overview/course_overview?cid=${cid}&name=${name}&desc=${desc}&type=${type}&premium=${
+        premium ? 1 : 0
+      }`
     });
   };
 

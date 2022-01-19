@@ -49,7 +49,8 @@ const Course = () => {
         .callFunction({
           name: "get_course",
           data: {
-            uid: userInfo?.uid ?? null
+            uid: userInfo?.uid ?? null,
+            type: userInfo?.type
           }
         })
         .then(({ result: { statusCode, learnList, techList } }: any) => {
@@ -101,8 +102,46 @@ const Course = () => {
 
   const handleTabClick = useCallback(value => setCurrent(value), [current]);
 
-  const handleJoinCourse = res => {
-    console.log({ cid: res.content });
+  const handleJoinCourse = ({ content }) => {
+    Taro.showLoading({
+      title: "加载中"
+    });
+    Taro.cloud
+      .callFunction({
+        // 要调用的云函数名称
+        name: "join_course",
+        // 传递给云函数的event参数
+        data: {
+          method: "byCid",
+          info: {
+            cid: content,
+            uid
+          }
+        }
+      })
+      .then(({ result: { statusCode, message } }: any) => {
+        console.log({ statusCode, message });
+        Taro.hideLoading();
+
+        if (statusCode == 200) {
+          Taro.showToast({
+            title: message,
+            icon: "success",
+            duration: 1500
+          });
+          loadCourseList(getGlobalData("USERINFO"));
+        } else if (statusCode == 403) {
+          Taro.showToast({
+            title: message,
+            icon: "none",
+            duration: 1500
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        Taro.hideLoading();
+      });
   };
 
   const handleFabClick = () =>
@@ -167,7 +206,7 @@ const Course = () => {
               {learnList.length === 0 ? (
                 <View className="empty">点击 + 按钮加入班级</View>
               ) : (
-                <CourseList items={learnList} />
+                <CourseList items={learnList} onRefresh={handleListRefresh} />
               )}
             </View>
           </AtTabsPane>

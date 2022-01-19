@@ -14,12 +14,16 @@ exports.main = async (event, context) => {
 
   let {
     method,
-    credits: { uid, password },
+    credits: {
+      uid,
+      password
+    },
   } = event;
 
-  let statusCode, userInfo;
+  let statusCode, message, userInfo;
 
   if (method == "bind") {
+    let avatarUrl
     await db
       .collection("rolls")
       .where({
@@ -27,9 +31,17 @@ exports.main = async (event, context) => {
         password,
       })
       .get()
-      .then(async ({ data }) => {
+      .then(async ({
+        data
+      }) => {
         if (data.length > 0) {
-          let { name, school, type, uid, isBinded } = data[0];
+          let {
+            realName,
+            school,
+            type,
+            uid,
+            isBinded
+          } = data[0];
           if (!isBinded) {
             await db
               .collection("users")
@@ -41,9 +53,24 @@ exports.main = async (event, context) => {
                   uid,
                   school,
                   type,
-                  realName: name,
+                  realName,
                   bindTime: new db.serverDate(),
                 },
+              });
+
+            await db
+              .collection("users")
+              .where({
+                _openid: wxContext.OPENID,
+              })
+              .get()
+              .then(({
+                data
+              }) => {
+                userInfo = data[0];
+                avatarUrl = data[0].avatarUrl
+                statusCode = 200;
+                message = "绑定成功";
               });
 
             await db
@@ -55,24 +82,16 @@ exports.main = async (event, context) => {
               .update({
                 data: {
                   isBinded: true,
+                  avatarUrl
                 },
-              });
-
-            await db
-              .collection("users")
-              .where({
-                _openid: wxContext.OPENID,
-              })
-              .get()
-              .then(({ data }) => {
-                userInfo = data[0];
-                statusCode = 200;
               });
           } else {
             statusCode = 403;
+            message = "该学号/工号已被绑定";
           }
         } else {
           statusCode = 404;
+          message = "该学号/工号验证失败";
         }
       });
   } else if (method == "unbind") {
@@ -108,14 +127,18 @@ exports.main = async (event, context) => {
         _openid: wxContext.OPENID,
       })
       .get()
-      .then(({ data }) => {
+      .then(({
+        data
+      }) => {
         userInfo = data[0];
         statusCode = 200;
+        message = "解绑成功";
       });
   }
 
   return {
     statusCode,
+    message,
     userInfo,
   };
 };

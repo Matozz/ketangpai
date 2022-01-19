@@ -50,21 +50,21 @@ const CourseCreate = () => {
       })
       .then(({ result: { statusCode, message } }: any) => {
         console.log({ statusCode, message });
+        Taro.hideLoading();
         if (statusCode == 200) {
           Taro.showToast({
-            title: "创建成功",
+            title: message,
             icon: "success",
             duration: 1500
           });
         } else if (statusCode == 403) {
           Taro.showToast({
-            title: "课程码已存在，已生成新的课程码",
+            title: message,
             icon: "none",
             duration: 1500
           });
           setCid(generateCourseId(4));
         }
-        Taro.hideLoading();
       })
       .catch(err => {
         console.log(err);
@@ -109,7 +109,7 @@ const CourseCreate = () => {
           <CourseCard
             name={name == "" ? "请输入课程名称" : name}
             desc={desc}
-            teacher={userInfo.realName ? userInfo.realName : userInfo.nickName}
+            teacher={userInfo.type == 1 ? userInfo.realName : userInfo.nickName}
             avatarUrl={userInfo.avatarUrl}
             premium={isBinded}
           />
