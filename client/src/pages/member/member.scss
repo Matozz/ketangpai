@@ -1,0 +1,21 @@
+.member {
+  .header {
+    display: flex;
+    margin: 16px 36px 26px 36px;
+    .left_btn {
+      flex: 1;
+      margin-right: 10px;
+    }
+    .right_btn {
+      flex: 1;
+      margin-left: 10px;
+    }
+    .at-button--small {
+      height: 70px;
+      line-height: 68px;
+      .at-icon {
+        margin-right: 6px;
+      }
+    }
+  }
+}

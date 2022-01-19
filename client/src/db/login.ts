@@ -19,6 +19,14 @@ export default function login(callback, errorCallback) {
       .then(({ result }: any) => {
         console.log(result);
 
+        if (!result.statusCode) {
+          Taro.showToast({
+            title: "服务器开小差了，请稍后重试",
+            icon: "none",
+            duration: 2000
+          });
+        }
+
         setGlobalData("USERINFO", result.userInfo);
         setGlobalData("BIND", !!result.userInfo?.uid);
 

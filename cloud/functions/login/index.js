@@ -22,7 +22,7 @@ exports.main = async (event, context) => {
     user,
     method
   } = event;
-  let status, userInfo;
+  let statusCode,message, userInfo;
 
   await db
     .collection("users")
@@ -44,13 +44,16 @@ exports.main = async (event, context) => {
           data: newUser,
         }).then((res) => {
           console.log(res);
-          status = "USER CREATED";
+          statusCode = 200;
+          message = "USER CREATED";
           userInfo = user;
         })
       } else if (data.length > 0) {
+        statusCode = 403;
         status = "USER EXSIST";
         userInfo = data[0];
       } else {
+        statusCode = 403;
         status = "USER NOT FOUND";
       }
     })
@@ -60,7 +63,8 @@ exports.main = async (event, context) => {
     });
 
   return {
-    message: status,
-    userInfo: userInfo,
+    statusCode,
+    message,
+    userInfo
   };
 };

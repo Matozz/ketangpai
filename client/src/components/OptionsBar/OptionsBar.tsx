@@ -22,7 +22,7 @@ const OptionsBar = ({ options }: Options) => {
   const handleNavigate = (path: string) => () => {
     if (getGlobalData("USERINFO")) {
       Taro.navigateTo({
-        url: `/pages/${path}/${path}`
+        url: path
       });
     } else {
       Taro.showToast({

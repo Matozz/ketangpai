@@ -1,5 +1,5 @@
 // 云函数入口文件
-const cloud = require('wx-server-sdk')
+const cloud = require("wx-server-sdk");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,
@@ -7,47 +7,47 @@ cloud.init({
 
 const db = cloud.database();
 const _ = db.command;
-const $ = db.command.aggregate
+const $ = db.command.aggregate;
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  const wxContext = cloud.getWXContext()
+  const wxContext = cloud.getWXContext();
 
-  let {
-    uid,
-    type
-  } = event
+  let { uid, type } = event;
 
-  let statusCode, message, techList = [],
+  let statusCode,
+    message,
+    techList = [],
     learnList = [];
 
   if (uid) {
-    await db.collection('class_links')
+    await db
+      .collection("class_links")
       .aggregate()
       .match({
-        uid: uid
+        uid: uid,
       })
       .lookup({
-        from: 'class_links',
-        localField: 'cid',
-        foreignField: 'cid',
-        as: 'user'
+        from: "class_links",
+        localField: "cid",
+        foreignField: "cid",
+        as: "user",
       })
-      .unwind('$user')
+      .unwind("$user")
       .match({
-        "user.type": 1
+        "user.type": 1,
       })
       .lookup({
-        from: 'rolls',
-        localField: 'user.uid',
-        foreignField: 'uid',
-        as: 'user'
+        from: "default_users",
+        localField: "user.uid",
+        foreignField: "uid",
+        as: "user",
       })
       .lookup({
-        from: 'classes',
-        localField: 'cid',
-        foreignField: 'cid',
-        as: 'class'
+        from: "classes",
+        localField: "cid",
+        foreignField: "cid",
+        as: "class",
       })
       .project({
         _openid: 0,
@@ -60,59 +60,59 @@ exports.main = async (event, context) => {
         "user.language": 0,
         "user.type": 0,
         "user.school": 0,
-        "user.password": 0
+        "user.password": 0,
       })
-      .unwind('$class')
-      .unwind('$user')
+      .unwind("$class")
+      .unwind("$user")
       .end()
-      .then(({
-        list
-      }) => {
+      .then(({ list }) => {
         if (list.length > 0) {
-          console.log(list)
-          techList = list.filter(item => item.type == 1)
-          learnList = list.filter(item => item.type == 0)
+          console.log(list);
+          techList = list.filter((item) => item.type == 1);
+          learnList = list.filter((item) => item.type == 0);
         }
-        statusCode = 200
-        message = "REQUEST SUCCESS"
-      }).catch(err => {
-        statusCode = 404
-        message = "REQUEST ERROR"
+        statusCode = 200;
+        message = "REQUEST SUCCESS";
       })
+      .catch((err) => {
+        statusCode = 404;
+        message = "REQUEST ERROR";
+      });
 
-    await db.collection('class_links')
+    await db
+      .collection("class_links")
       .aggregate()
       .match({
         _openid: "o67RG5e80GwIT4ihFGKZVPm4CcME",
-        uid: type == 0 ? null : undefined
+        uid: type == 0 ? null : undefined,
       })
       .lookup({
-        from: 'classes',
-        localField: 'cid',
-        foreignField: 'cid',
-        as: 'class'
+        from: "classes",
+        localField: "cid",
+        foreignField: "cid",
+        as: "class",
       })
-      .unwind('$class')
+      .unwind("$class")
       .match({
-        "class.premium": false
+        "class.premium": false,
       })
       .lookup({
-        from: 'class_links',
-        localField: 'cid',
-        foreignField: 'cid',
-        as: 'user'
+        from: "class_links",
+        localField: "cid",
+        foreignField: "cid",
+        as: "user",
       })
-      .unwind('$user')
+      .unwind("$user")
       .match({
-        "user.type": 1
+        "user.type": 1,
       })
       .lookup({
-        from: 'users',
-        localField: 'user._openid',
-        foreignField: '_openid',
-        as: 'user'
+        from: "users",
+        localField: "user._openid",
+        foreignField: "_openid",
+        as: "user",
       })
-      .unwind('$user')
+      .unwind("$user")
       .project({
         _openid: 0,
         _id: 0,
@@ -132,59 +132,57 @@ exports.main = async (event, context) => {
         "user.uid": 0,
         "user.realName": 0,
         "user.phoneNum": 0,
-        "user.password": 0
+        "user.password": 0,
       })
       .end()
-      .then(({
-        list
-      }) => {
+      .then(({ list }) => {
         if (list.length > 0) {
-          console.log(list)
-          techList = [...techList, ...list.filter(item => item.type == 1)]
-          learnList = [...learnList, ...list.filter(item => item.type == 0)]
+          console.log(list);
+          techList = [...techList, ...list.filter((item) => item.type == 1)];
+          learnList = [...learnList, ...list.filter((item) => item.type == 0)];
         }
-        statusCode = 200
-        message = "REQUEST SUCCESS"
-      }).catch(err => {
-        statusCode = 404
-        message = "REQUEST ERROR"
+        statusCode = 200;
+        message = "REQUEST SUCCESS";
       })
-
-
+      .catch((err) => {
+        statusCode = 404;
+        message = "REQUEST ERROR";
+      });
   } else {
-    await db.collection('class_links')
+    await db
+      .collection("class_links")
       .aggregate()
       .match({
         _openid: wxContext.OPENID,
-        uid: null
+        uid: null,
       })
       .lookup({
-        from: 'classes',
-        localField: 'cid',
-        foreignField: 'cid',
-        as: 'class'
+        from: "classes",
+        localField: "cid",
+        foreignField: "cid",
+        as: "class",
       })
-      .unwind('$class')
+      .unwind("$class")
       .match({
-        "class.premium": false
+        "class.premium": false,
       })
       .lookup({
-        from: 'class_links',
-        localField: 'cid',
-        foreignField: 'cid',
-        as: 'user'
+        from: "class_links",
+        localField: "cid",
+        foreignField: "cid",
+        as: "user",
       })
-      .unwind('$user')
+      .unwind("$user")
       .match({
-        "user.type": 1
+        "user.type": 1,
       })
       .lookup({
-        from: 'users',
-        localField: 'user._openid',
-        foreignField: '_openid',
-        as: 'user'
+        from: "users",
+        localField: "user._openid",
+        foreignField: "_openid",
+        as: "user",
       })
-      .unwind('$user')
+      .unwind("$user")
       .project({
         _openid: 0,
         _id: 0,
@@ -204,30 +202,28 @@ exports.main = async (event, context) => {
         "user.uid": 0,
         "user.realName": 0,
         "user.phoneNum": 0,
-        "user.password": 0
+        "user.password": 0,
       })
       .end()
-      .then(({
-        list
-      }) => {
+      .then(({ list }) => {
         if (list.length > 0) {
-          console.log(list)
-          techList = list.filter(item => item.type == 1)
-          learnList = list.filter(item => item.type == 0)
+          console.log(list);
+          techList = list.filter((item) => item.type == 1);
+          learnList = list.filter((item) => item.type == 0);
         }
-        statusCode = 200
-        message = "REQUEST SUCCESS"
-      }).catch(err => {
-        statusCode = 404
-        message = "REQUEST ERROR"
+        statusCode = 200;
+        message = "REQUEST SUCCESS";
       })
+      .catch((err) => {
+        statusCode = 404;
+        message = "REQUEST ERROR";
+      });
   }
-
 
   return {
     statusCode,
     message,
     techList,
-    learnList
-  }
-}
+    learnList,
+  };
+};

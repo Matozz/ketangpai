@@ -13,12 +13,6 @@ const tabList = [
   { title: "考勤" },
   { title: "公告" }
 ];
-const options = [
-  { title: "成员", icon: "user" },
-  { title: "课件库", icon: "folder" },
-  { title: "分析", icon: "analytics" },
-  { title: "设置", icon: "settings" }
-];
 
 const CourseOverview = () => {
   const [params, setParams] = useState<any>({});
@@ -48,6 +42,17 @@ const CourseOverview = () => {
       .catch(res => {
         console.log(res.errMsg);
       });
+
+  const options = [
+    {
+      title: "成员",
+      icon: "user",
+      path: `/pages/member/member?cid=${params.cid}&type=${params.type}&premium=${params.premium}`
+    },
+    { title: "课件库", icon: "folder" },
+    { title: "分析", icon: "analytics" },
+    { title: "设置", icon: "settings" }
+  ];
 
   return (
     <View className="overview">

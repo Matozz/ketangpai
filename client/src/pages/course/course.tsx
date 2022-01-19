@@ -13,7 +13,7 @@ declare let wx: any;
 
 const tabList = [{ title: "我教的课" }, { title: "我听的课" }];
 const options = [
-  { title: "课件库", icon: "file-code", path: "courseware" },
+  { title: "课件库", icon: "file-code", path: "/pages/courseware/courseware" },
   { title: "试卷库", icon: "folder" },
   { title: "收藏", icon: "heart" }
 ];
@@ -78,7 +78,7 @@ const Course = () => {
   useReady(() => {
     loadPage()
       .then(userInfo => {
-        loadCourseList(userInfo);
+        if (userInfo) loadCourseList(userInfo);
       })
       .catch(err => {
         Taro.showToast({
@@ -108,9 +108,7 @@ const Course = () => {
     });
     Taro.cloud
       .callFunction({
-        // 要调用的云函数名称
         name: "join_course",
-        // 传递给云函数的event参数
         data: {
           method: "byCid",
           info: {

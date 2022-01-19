@@ -14,34 +14,23 @@ exports.main = async (event, context) => {
 
   let {
     method,
-    credits: {
-      uid,
-      password
-    },
+    credits: { uid, password },
   } = event;
 
   let statusCode, message, userInfo;
 
   if (method == "bind") {
-    let avatarUrl
+    let avatarUrl;
     await db
-      .collection("rolls")
+      .collection("default_users")
       .where({
         uid,
         password,
       })
       .get()
-      .then(async ({
-        data
-      }) => {
+      .then(async ({ data }) => {
         if (data.length > 0) {
-          let {
-            realName,
-            school,
-            type,
-            uid,
-            isBinded
-          } = data[0];
+          let { realName, school, type, uid, isBinded } = data[0];
           if (!isBinded) {
             await db
               .collection("users")
@@ -64,17 +53,15 @@ exports.main = async (event, context) => {
                 _openid: wxContext.OPENID,
               })
               .get()
-              .then(({
-                data
-              }) => {
+              .then(({ data }) => {
                 userInfo = data[0];
-                avatarUrl = data[0].avatarUrl
+                avatarUrl = data[0].avatarUrl;
                 statusCode = 200;
                 message = "绑定成功";
               });
 
             await db
-              .collection("rolls")
+              .collection("default_users")
               .where({
                 uid,
                 password,
@@ -82,7 +69,7 @@ exports.main = async (event, context) => {
               .update({
                 data: {
                   isBinded: true,
-                  avatarUrl
+                  avatarUrl,
                 },
               });
           } else {
@@ -96,7 +83,7 @@ exports.main = async (event, context) => {
       });
   } else if (method == "unbind") {
     await db
-      .collection("rolls")
+      .collection("default_users")
       .where({
         uid,
       })
@@ -127,9 +114,7 @@ exports.main = async (event, context) => {
         _openid: wxContext.OPENID,
       })
       .get()
-      .then(({
-        data
-      }) => {
+      .then(({ data }) => {
         userInfo = data[0];
         statusCode = 200;
         message = "解绑成功";
