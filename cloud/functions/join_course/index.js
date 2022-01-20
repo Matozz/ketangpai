@@ -112,7 +112,41 @@ exports.main = async (event, context) => {
       }
     })
   } else if (method == 'byGroup') {
+    let {
+      cid,
+      uidList
+    } = info
 
+    for (let i = 0; i < uidList.length; i++) {
+      let uid = uidList[i]
+      await db.collection('default_users').where({
+        uid
+      }).get().then(async ({
+        data
+      }) => {
+        if (data.length > 0) {
+          await db.collection('class_links').where({
+            uid,
+            cid,
+            type: 0
+          }).get().then(async ({
+            data
+          }) => {
+            if (data.length <= 0) {
+              await db.collection('class_links').add({
+                data: {
+                  cid,
+                  uid,
+                  type: 0
+                }
+              })
+            }
+          })
+        }
+      })
+    }
+    statusCode = 200
+    message = '导入成功'
   }
 
   return {

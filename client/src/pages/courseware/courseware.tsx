@@ -51,8 +51,8 @@ const Courseware = () => {
     <View className="courseware">
       <AtCard
         className="file-card"
-        note="PPTX"
-        extra="2021/01/10"
+        note="2022/1/20 18:48:00"
+        extra="PPTX"
         title="从渲染原理到性能优化"
         // thumb="https://icon-library.com/images/ppt-icon/ppt-icon-1.jpg"
         onClick={handleClickFileCard}
@@ -61,8 +61,8 @@ const Courseware = () => {
       </AtCard>
       <AtCard
         className="file-card"
-        note="PDF"
-        extra="2021/01/12"
+        note="2022/1/20 18:48:00"
+        extra="PDF"
         title="2022汤家凤线性代数辅导讲义"
         // thumb="https://freeiconshop.com/wp-content/uploads/edd/pdf-flat.png"
         onClick={handleClickFileCard2}

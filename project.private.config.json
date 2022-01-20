@@ -11,7 +11,15 @@
       "list": []
     },
     "miniprogram": {
-      "list": []
+      "list": [
+        {
+          "name": "",
+          "pathName": "pages/course_overview/course_overview",
+          "query": "cid=6YERJ8PS&name=Test&desc=Test&type=1&premium=1",
+          "scene": null,
+          "launchMode": "default"
+        }
+      ]
     }
   }
 }

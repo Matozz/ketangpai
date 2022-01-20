@@ -1,16 +1,19 @@
 import { ScrollView, View } from "@tarojs/components";
 import React, { useEffect, useState } from "react";
-import { AtDivider } from "taro-ui";
+import { AtCard, AtDivider, AtTimeline } from "taro-ui";
 import { CourseCard } from "..";
 import course from "../../pages/course/course";
 import { getContainerHeight } from "../../utils";
+import DetailCard from "../DetailCard/DetailCard";
 
 import "./CourseList.scss";
 
 const CourseList = ({
-  items,
+  cardType = "course",
+  items = [],
   onRefresh
 }: {
+  cardType?: "course" | "detail";
   items?: any;
   onRefresh?: () => Promise<unknown>;
 }) => {
@@ -26,8 +29,15 @@ const CourseList = ({
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await onRefresh();
-    setRefreshing(false);
+
+    if (cardType == "course") {
+      await onRefresh();
+      setRefreshing(false);
+    } else {
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1000);
+    }
   };
 
   return (
@@ -42,23 +52,35 @@ const CourseList = ({
       refresherTriggered={refreshing}
       onRefresherRefresh={handleRefresh}
     >
-      {items.map(({ cid, type, user, class: _class }, index) => (
-        <CourseCard
-          name={_class.name}
-          desc={_class.desc}
-          teacher={user?.realName ?? user.nickName}
-          premium={_class.premium}
-          avatarUrl={user.avatarUrl}
-          cid={cid}
-          type={type}
-          options
-        />
-      ))}
+      {cardType == "course" &&
+        items.map(({ cid, type, user, class: _class }, index) => (
+          <CourseCard
+            name={_class.name}
+            desc={_class.desc}
+            teacher={user?.realName ?? user.nickName}
+            premium={_class.premium}
+            avatarUrl={user.avatarUrl}
+            cid={cid}
+            type={type}
+            options
+          />
+        ))}
+      {cardType == "detail" &&
+        items.map(({ title, extra, note, type, content }) => (
+          <DetailCard
+            title={title}
+            extra={extra}
+            note={note}
+            type={type}
+            content={content}
+          />
+        ))}
+      <View style="height:150rpx"></View>
       {/* <AtDivider
         height={150}
         content="没有更多了"
-        fontColor="#6190E8"
-        lineColor="#6190E8"
+        fontColor="#777777"
+        lineColor="#d6e4ef"
       /> */}
     </ScrollView>
   );

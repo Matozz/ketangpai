@@ -6,8 +6,45 @@ import { CourseList, OptionsBar } from "../../components";
 
 import "./course_overview.scss";
 
-const tabList = [
-  { title: "全部" },
+const tabTitle = [
+  {
+    title: "全部",
+    contents: [
+      {
+        title: "第一次课",
+        extra: "2020-2021_1",
+        type: "timeline",
+        note: "2022/1/20 18:48:00",
+        content: [
+          { title: "开始上课", content: ["8:20"] },
+          { title: "课堂小测", content: ["9:25"] },
+          { title: "下课", content: ["9:55"] },
+          { title: "作业提交", content: ["18:00"] }
+        ]
+      },
+      {
+        title: "测试课件",
+        extra: "PPTX",
+        type: "file",
+        note: "2022/1/20 18:48:00",
+        content: "文件描述文件描述"
+      },
+      {
+        title: "测试考勤",
+        extra: "考勤码考勤",
+        type: "checkin",
+        note: "2022/1/20 18:48:00",
+        content: "放倒计时！！"
+      },
+      {
+        title: "测试公告",
+        extra: "公告",
+        type: "notice",
+        note: "2022/1/20 18:48:00",
+        content: "公告内容公告内容"
+      }
+    ]
+  },
   { title: "课堂" },
   { title: "课件" },
   { title: "考勤" },
@@ -17,7 +54,7 @@ const tabList = [
 const CourseOverview = () => {
   const [params, setParams] = useState<any>({});
   const [current, setCurrent] = useState(0);
-  // const [cid, setCid] = useState("");
+  const [tabList, setTabList] = useState(tabTitle);
 
   useReady(() => {
     let { cid, name, desc, type, premium } = getCurrentInstance().router.params;
@@ -32,7 +69,7 @@ const CourseOverview = () => {
 
   const handleFabClick = () =>
     Taro.showActionSheet({
-      itemList: ["开始上课", "创建考勤", "发布公告"]
+      itemList: ["开始上课", "创建考勤", "上传课件", "发布公告"]
     })
       .then(({ tapIndex }) => {
         if (tapIndex == 0) {
@@ -94,17 +131,17 @@ const CourseOverview = () => {
           tabList={tabList}
           onClick={handleTabClick.bind(this)}
         >
-          {tabList.map(() => (
+          {tabList.map(({ contents }) => (
             <AtTabsPane current={current} index={0}>
               <View className="tab">
-                {true ? (
+                {contents?.length ?? 0 > 0 ? (
+                  <CourseList cardType="detail" items={contents} />
+                ) : (
                   <View className="empty">
                     {params.type == 1
                       ? "点击 + 发布教学活动"
                       : "老师还未发布教学活动"}
                   </View>
-                ) : (
-                  <CourseList />
                 )}
               </View>
             </AtTabsPane>

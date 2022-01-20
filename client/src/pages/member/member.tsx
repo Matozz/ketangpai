@@ -2,6 +2,7 @@ import { Picker, Text, View } from "@tarojs/components";
 import Taro, { getCurrentInstance, useReady } from "@tarojs/taro";
 import React, { useState } from "react";
 import { AtButton, AtIcon, AtList, AtListItem } from "taro-ui";
+import getClasses from "../../db/classes";
 
 import "./member.scss";
 
@@ -11,9 +12,7 @@ const Member = () => {
   const [params, setParams] = useState<any>({});
   const [teacher, setTeacher] = useState([]);
   const [studentList, setStudentList] = useState([]);
-  const [classList, setClassList] = useState([
-    { name: "18信计", classid: "5b049cc861e7dd960706ded42845f3f3" }
-  ]);
+  const [classList, setClassList] = useState([]);
 
   const loadMembers = (cid: string, premium: string) => {
     Taro.showLoading({ title: "加载中" });
@@ -44,22 +43,30 @@ const Member = () => {
       });
   };
 
+  const loadClasses = async () => {
+    getClasses().then(classes => {
+      setClassList(classes);
+    });
+  };
+
   useReady(() => {
     let { cid, type, premium } = getCurrentInstance().router.params;
     setParams({ cid, type, premium });
     loadMembers(cid, premium);
+    loadClasses();
   });
 
-  const handleJoinCourse = ({ content }) => {
+  const handleJoinCourse = (type: string, studentList?: string[]) => (e?) => {
     Taro.showLoading({ title: "添加中" });
     Taro.cloud
       .callFunction({
         name: "join_course",
         data: {
-          method: "byUid",
+          method: type,
           info: {
             cid: params.cid,
-            uid: content,
+            uid: e?.content,
+            uidList: studentList,
             teacher_uid: teacher[0].user.uid
           }
         }
@@ -92,14 +99,16 @@ const Member = () => {
   const handlePickerChange = e => {
     Taro.showLoading({ title: "加载中" });
 
+    const { name, students } = classList[e.detail.value];
+
     setTimeout(() => {
       Taro.hideLoading();
       Taro.showModal({
-        title: `导入${classList[e.detail.value].name}学生名单`,
-        content: "该班级共有1名学生",
+        title: `导入${name}学生名单`,
+        content: `该班级共有${students.length}名学生`,
         success: res => {
           if (res.confirm) {
-            console.log("用户点击确定");
+            handleJoinCourse("byGroup", students)();
           } else if (res.cancel) {
             console.log("用户点击取消");
           }
@@ -117,7 +126,7 @@ const Member = () => {
       confirmText: "添加",
       success: res => {
         if (res.confirm) {
-          handleJoinCourse(res);
+          handleJoinCourse("byUid")(res);
         } else if (res.cancel) {
           console.log("用户点击取消");
         }

@@ -17,3 +17,11 @@ export interface CourseCardProps {
   cid?: string;
   type?: 1 | 0;
 }
+
+export interface DetailCardProps {
+  title: string;
+  extra?: string;
+  note?: string;
+  type: "timeline" | "file" | "checkin" | "notice";
+  content?: any;
+}
