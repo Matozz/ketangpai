@@ -147,24 +147,32 @@ const Course = () => {
       itemList: ["创建课程", "加入班级"]
     })
       .then(({ tapIndex }) => {
-        if (tapIndex == 0) {
-          Taro.navigateTo({
-            url: "/pages/course_create/course_create"
-          });
-        } else {
-          // Wechat miniprogram scope!!!
-          wx.showModal({
-            title: "加入课程",
-            editable: true,
-            placeholderText: "请输入课程码",
-            confirmText: "加入",
-            success: function(res) {
-              if (res.confirm) {
-                handleJoinCourse(res);
-              } else if (res.cancel) {
-                console.log("用户点击取消");
+        if (getGlobalData("USERINFO")) {
+          if (tapIndex == 0) {
+            Taro.navigateTo({
+              url: "/pages/course_create/course_create"
+            });
+          } else {
+            // Wechat miniprogram scope!!!
+            wx.showModal({
+              title: "加入课程",
+              editable: true,
+              placeholderText: "请输入课程码",
+              confirmText: "加入",
+              success: function(res) {
+                if (res.confirm) {
+                  handleJoinCourse(res);
+                } else if (res.cancel) {
+                  console.log("用户点击取消");
+                }
               }
-            }
+            });
+          }
+        } else {
+          Taro.showToast({
+            title: "授权登录以继续",
+            icon: "none",
+            duration: 1500
           });
         }
       })

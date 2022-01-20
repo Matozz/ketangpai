@@ -68,7 +68,49 @@ exports.main = async (event, context) => {
       }
     })
   } else if (method == 'byUid') {
-    
+    let {
+      teacher_uid,
+      cid,
+      uid
+    } = info
+    await db.collection('default_users').where({
+      uid
+    }).get().then(async ({
+      data
+    }) => {
+      if (data.length > 0) {
+        if (teacher_uid == uid) {
+          statusCode = 403
+          message = '添加失败，请输入学生学号'
+        } else {
+          await db.collection('class_links').where({
+            uid,
+            cid,
+            type: 0
+          }).get().then(async ({
+            data
+          }) => {
+            if (data.length > 0) {
+              statusCode = 403
+              message = '该学生已在该课程中'
+            } else {
+              await db.collection('class_links').add({
+                data: {
+                  cid,
+                  uid,
+                  type: 0
+                }
+              })
+              statusCode = 200
+              message = '添加成功'
+            }
+          })
+        }
+      } else {
+        statusCode = 403
+        message = '学号不存在'
+      }
+    })
   } else if (method == 'byGroup') {
 
   }

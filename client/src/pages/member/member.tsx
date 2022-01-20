@@ -50,6 +50,45 @@ const Member = () => {
     loadMembers(cid, premium);
   });
 
+  const handleJoinCourse = ({ content }) => {
+    Taro.showLoading({ title: "添加中" });
+    Taro.cloud
+      .callFunction({
+        name: "join_course",
+        data: {
+          method: "byUid",
+          info: {
+            cid: params.cid,
+            uid: content,
+            teacher_uid: teacher[0].user.uid
+          }
+        }
+      })
+      .then(({ result: { statusCode, message } }: any) => {
+        console.log({ statusCode, message });
+        Taro.hideLoading();
+
+        if (statusCode == 200) {
+          Taro.showToast({
+            title: message,
+            icon: "success",
+            duration: 1500
+          });
+          loadMembers(params.cid, params.premium);
+        } else if (statusCode == 403) {
+          Taro.showToast({
+            title: message,
+            icon: "none",
+            duration: 1500
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        Taro.hideLoading();
+      });
+  };
+
   const handlePickerChange = e => {
     Taro.showLoading({ title: "加载中" });
 
@@ -78,7 +117,7 @@ const Member = () => {
       confirmText: "添加",
       success: res => {
         if (res.confirm) {
-          console.log("用户点击确定");
+          handleJoinCourse(res);
         } else if (res.cancel) {
           console.log("用户点击取消");
         }
