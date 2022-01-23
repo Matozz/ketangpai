@@ -1,6 +1,6 @@
-import avatar from "../images/test_img/avatar.png";
+import avatar from "../images/test_img/default-avatar.png";
 
 export const DefaultValue = {
-  NickName: "威少爷（未授权）",
+  NickName: "微信用户（未授权）",
   AvatarUrl: avatar
 };

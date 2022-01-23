@@ -112,7 +112,7 @@ const DetailCard = ({
 
   return (
     <AtCard
-      note={viewType == 1 ? scheduledNote : "" + note}
+      note={(viewType == 1 ? scheduledNote : "") + note}
       extra={extra}
       title={title}
     >
