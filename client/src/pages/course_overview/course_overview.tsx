@@ -7,48 +7,11 @@ import { CourseList, OptionsBar } from "../../components";
 import "./course_overview.scss";
 
 const tabTitle = [
-  {
-    title: "全部",
-    contents: [
-      {
-        title: "第一次课",
-        extra: "2020-2021_1",
-        type: "timeline",
-        note: "2022/1/20 18:48:00",
-        content: [
-          { title: "开始上课", content: ["8:20"] },
-          { title: "课堂小测", content: ["9:25"] },
-          { title: "下课", content: ["9:55"] },
-          { title: "作业提交", content: ["18:00"] }
-        ]
-      },
-      {
-        title: "测试课件",
-        extra: "PPTX",
-        type: "file",
-        note: "2022/1/20 18:48:00",
-        content: "文件描述文件描述"
-      },
-      {
-        title: "测试考勤",
-        extra: "考勤码考勤",
-        type: "checkin",
-        note: "2022/1/20 18:48:00",
-        content: "放倒计时！！"
-      },
-      {
-        title: "测试公告",
-        extra: "公告",
-        type: "notice",
-        note: "2022/1/20 18:48:00",
-        content: "公告内容公告内容"
-      }
-    ]
-  },
-  { title: "课堂" },
-  { title: "课件" },
-  { title: "考勤" },
-  { title: "公告" }
+  { title: "全部", contents: [] },
+  { title: "课堂", contents: [] },
+  { title: "课件", contents: [] },
+  { title: "考勤", contents: [] },
+  { title: "公告", contents: [] }
 ];
 
 const CourseOverview = () => {
@@ -56,10 +19,41 @@ const CourseOverview = () => {
   const [current, setCurrent] = useState(0);
   const [tabList, setTabList] = useState(tabTitle);
 
+  const loadDetails = (cid, viewType) => {
+    Taro.showLoading({ title: "加载中" });
+    Taro.cloud
+      .callFunction({
+        // 要调用的云函数名称
+        name: "get_detail",
+        // 传递给云函数的event参数
+        data: {
+          cid,
+          viewType
+        }
+      })
+      .then(({ result: { statusCode, message, list } }: any) => {
+        console.log({ statusCode, message, list });
+        let tabList = tabTitle.map((item, index) => {
+          if (index === 0) {
+            return { ...item, contents: list.flat(1) };
+          } else {
+            return { ...item, contents: list[index - 1] };
+          }
+        });
+
+        setTabList(tabList);
+        Taro.hideLoading();
+      })
+      .catch(err => {
+        console.log(err);
+        Taro.hideLoading();
+      });
+  };
+
   useReady(() => {
     let { cid, name, desc, type, premium } = getCurrentInstance().router.params;
     setParams({ cid, name, desc, type, premium });
-
+    loadDetails(cid, type);
     Taro.setNavigationBarTitle({ title: name });
   });
 
@@ -112,7 +106,7 @@ const CourseOverview = () => {
                     size="20"
                     color="#666"
                   ></AtIcon>
-                  <Text>认证课程</Text>
+                  <Text className="premium_text">认证课程</Text>
                 </AtTag>
               </View>
             )}
@@ -135,7 +129,11 @@ const CourseOverview = () => {
             <AtTabsPane current={current} index={0}>
               <View className="tab">
                 {contents?.length ?? 0 > 0 ? (
-                  <CourseList cardType="detail" items={contents} />
+                  <CourseList
+                    cardType="detail"
+                    items={contents}
+                    type={params.type}
+                  />
                 ) : (
                   <View className="empty">
                     {params.type == 1

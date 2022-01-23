@@ -1,14 +1,57 @@
 import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AtButton, AtCard, AtCountdown, AtTimeline } from "taro-ui";
 import { DetailCardProps } from "../../types/type";
+import { formatTime, countdownTime } from "../../utils";
 
 import "./DetailCard.scss";
 
 declare let wx: any;
 
-const DetailCard = ({ title, extra, note, type, content }: DetailCardProps) => {
+const DetailCard = ({
+  item: {
+    _id,
+    title,
+    extra,
+    type,
+    content,
+    fileID,
+    createTime,
+    scheduleTime,
+    finishTime
+  },
+  viewType
+}: DetailCardProps) => {
+  const [scheduledNote, setScheduledNote] = useState("");
+  const [isCheckedin, setIsCheckedin] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [note, setNote] = useState(formatTime(new Date(scheduleTime)));
+  const [countdown, setCountdown] = useState<{
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
+  }>({});
+
+  useEffect(() => {
+    if (Date.now() < new Date(scheduleTime).getTime()) {
+      setScheduledNote("计划开始时间 ");
+    } else {
+      setScheduledNote("已开始 ");
+    }
+    if (type === "checkin") {
+      let countdown = countdownTime(finishTime);
+      setCountdown(countdown.part);
+      setIsFinished(countdown.isFinished);
+      setIsLoading(false);
+    }
+  }, []);
+
+  const handleCountDownTimeUp = () => {
+    setIsFinished(true);
+  };
+
   const handleCheckin = () => {
     wx.showModal({
       title: "签到",
@@ -18,6 +61,16 @@ const DetailCard = ({ title, extra, note, type, content }: DetailCardProps) => {
       success: res => {
         if (res.confirm) {
           console.log("用户点击确认");
+          setIsLoading(true);
+          setTimeout(() => {
+            Taro.showToast({
+              title: "签到成功",
+              icon: "success",
+              duration: 1500
+            });
+            setIsCheckedin(true);
+            setIsLoading(false);
+          }, 1000);
         } else if (res.cancel) {
           console.log("用户点击取消");
         }
@@ -25,11 +78,25 @@ const DetailCard = ({ title, extra, note, type, content }: DetailCardProps) => {
     });
   };
 
+  const handleStopCheckin = () => {
+    setIsLoading(true);
+
+    // Database to change finishTime
+    setTimeout(() => {
+      setCountdown({
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+      });
+      setIsFinished(true);
+      setIsLoading(false);
+    }, 1000);
+  };
+
   const handleOpenFile = () => {
     Taro.showLoading({ title: "文件加载中" });
     Taro.cloud.downloadFile({
-      fileID:
-        "cloud1-7gweoaho6f4398d8.636c-cloud1-7gweoaho6f4398d8-1309227766/Chapter 3&4 语义建模 .pptx",
+      fileID,
       success: function(res) {
         const filePath = res.tempFilePath;
         Taro.openDocument({
@@ -45,12 +112,11 @@ const DetailCard = ({ title, extra, note, type, content }: DetailCardProps) => {
 
   return (
     <AtCard
-      note={note}
+      note={viewType == 1 ? scheduledNote : "" + note}
       extra={extra}
       title={title}
-      // thumb="http://www.logoquan.com/upload/list/20180421/logoquan15259400209.PNG"
     >
-      {type === "timeline" && <AtTimeline items={content}></AtTimeline>}
+      {type === "detail" && <AtTimeline items={content}></AtTimeline>}
 
       {type === "file" && (
         <View>
@@ -73,20 +139,42 @@ const DetailCard = ({ title, extra, note, type, content }: DetailCardProps) => {
             <AtCountdown
               isCard
               format={{ hours: ":", minutes: ":", seconds: "" }}
-              hours={0}
-              minutes={5}
-              seconds={0}
+              hours={countdown.hours}
+              minutes={countdown.minutes}
+              seconds={countdown.seconds}
+              onTimeUp={handleCountDownTimeUp}
             />
           </View>
 
-          <AtButton
-            type="secondary"
-            size="small"
-            className="button"
-            onClick={handleCheckin}
-          >
-            去签到
-          </AtButton>
+          {viewType == 0 ? (
+            <AtButton
+              type="secondary"
+              size="small"
+              className="button"
+              onClick={handleCheckin}
+              loading={isLoading}
+              disabled={isCheckedin || isFinished}
+            >
+              {isLoading
+                ? "加载中"
+                : isFinished
+                ? "考勤已结束"
+                : isCheckedin
+                ? "已签到"
+                : "去签到"}
+            </AtButton>
+          ) : (
+            <AtButton
+              type="secondary"
+              size="small"
+              className="button"
+              onClick={handleStopCheckin}
+              loading={isLoading}
+              disabled={isFinished}
+            >
+              {isLoading ? "加载中" : isFinished ? "考勤已结束" : "结束考勤"}
+            </AtButton>
+          )}
         </View>
       )}
 

@@ -19,9 +19,16 @@ export interface CourseCardProps {
 }
 
 export interface DetailCardProps {
-  title: string;
-  extra?: string;
-  note?: string;
-  type: "timeline" | "file" | "checkin" | "notice";
-  content?: any;
+  item: {
+    _id: string;
+    title: string;
+    extra?: string;
+    type: "detail" | "file" | "checkin" | "notice";
+    content?: any;
+    fileID?: string;
+    createTime: string;
+    scheduleTime: string;
+    finishTime?: string;
+  };
+  viewType: 0 | 1;
 }

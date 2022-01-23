@@ -11,10 +11,12 @@ import "./CourseList.scss";
 const CourseList = ({
   cardType = "course",
   items = [],
+  type,
   onRefresh
 }: {
   cardType?: "course" | "detail";
   items?: any;
+  type?: 0 | 1;
   onRefresh?: () => Promise<unknown>;
 }) => {
   const [height, setHeight] = useState(0);
@@ -66,15 +68,7 @@ const CourseList = ({
           />
         ))}
       {cardType == "detail" &&
-        items.map(({ title, extra, note, type, content }) => (
-          <DetailCard
-            title={title}
-            extra={extra}
-            note={note}
-            type={type}
-            content={content}
-          />
-        ))}
+        items.map(item => <DetailCard item={item} viewType={type} />)}
       <View style="height:150rpx"></View>
       {/* <AtDivider
         height={150}

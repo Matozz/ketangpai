@@ -23,7 +23,7 @@ page {
         flex: 1;
         text-align: right;
         .at-tag {
-          padding: 0 16px 0 10px;
+          padding: 0 18px 0 10px;
           border: none;
         }
         .premium {
@@ -68,4 +68,9 @@ page {
   position: fixed;
   bottom: 80px;
   right: 50px;
+}
+
+.premium_text {
+  font-size: 26px;
+  font-weight: 500;
 }
