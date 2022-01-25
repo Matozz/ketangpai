@@ -1,10 +1,9 @@
 import { ScrollView, View } from "@tarojs/components";
 import React, { useEffect, useState } from "react";
 import { AtCard, AtDivider, AtTimeline } from "taro-ui";
-import { CourseCard } from "..";
+import { CourseCard, DetailCard } from "..";
 import course from "../../pages/course/course";
 import { getContainerHeight } from "../../utils";
-import DetailCard from "../DetailCard/DetailCard";
 
 import "./CourseList.scss";
 

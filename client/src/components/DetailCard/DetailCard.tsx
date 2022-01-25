@@ -110,11 +110,18 @@ const DetailCard = ({
     });
   };
 
+  const handleCardClick = () => {
+    Taro.navigateTo({
+      url: `/pages/course_${type}/course_${type}?_id=${_id}&viewType=${viewType}`
+    });
+  };
+
   return (
     <AtCard
       note={(viewType == 1 ? scheduledNote : "") + note}
       extra={extra}
       title={title}
+      onClick={handleCardClick}
     >
       {type === "detail" && <AtTimeline items={content}></AtTimeline>}
 
