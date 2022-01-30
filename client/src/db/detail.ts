@@ -6,6 +6,7 @@ export const getCourseDetail = (_id): Promise<any> => {
   return new Promise((resolve, reject) => {
     db.collection("class_details")
       .doc(_id)
+      // @ts-ignore
       .get()
       .then(res => resolve(res.data));
   });
