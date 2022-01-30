@@ -1,4 +1,4 @@
 export default {
-  navigationBarTitleText: "课程",
+  navigationBarTitleText: "We课堂",
   disableScroll: true
 };

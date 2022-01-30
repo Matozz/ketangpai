@@ -14,6 +14,7 @@
 @import "~taro-ui/dist/style/components/modal.scss";
 @import "~taro-ui/dist/style/components/timeline.scss";
 @import "~taro-ui/dist/style/components/countdown.scss";
+@import "~taro-ui/dist/style/components/switch.scss";
 
 .at-tabs__item {
   font-weight: 500;
@@ -82,4 +83,8 @@
 
 .at-loading__ring {
   border-width: 4px;
+}
+
+.hidden {
+  display: none;
 }

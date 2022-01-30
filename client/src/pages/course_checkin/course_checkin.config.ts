@@ -1,5 +1,5 @@
 export default {
   navigationBarTitleText: "考勤详情",
-  enablePullDownRefresh: true,
+  // enablePullDownRefresh: true,
   backgroundTextStyle: "dark"
 };

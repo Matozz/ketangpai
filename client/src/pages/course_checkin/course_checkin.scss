@@ -82,14 +82,33 @@ page {
 
   .number {
     height: 360px;
+    &.student {
+      height: 350px;
+      .title {
+        margin: 30px;
+      }
+      .num {
+        height: 60px;
+        margin-bottom: 36px;
+      }
+    }
   }
 
   .map {
     height: 700px;
+    &.student {
+      height: 780px;
+    }
   }
 
   .qrcode {
-    height: 600px;
+    height: 620px;
+    &.student {
+      .title {
+        margin: 30px;
+      }
+      height: 240px;
+    }
     .code_img {
       height: 300px;
       width: 300px;
@@ -102,4 +121,23 @@ page {
   position: fixed;
   bottom: 80px;
   right: 50px;
+}
+
+.loading {
+  position: relative;
+  height: 300px;
+  background-color: white;
+  margin-bottom: 12px;
+}
+
+.finish {
+  height: 200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #efefef;
+  border-radius: 8px;
+  margin-top: 20px;
+  color: #666;
 }

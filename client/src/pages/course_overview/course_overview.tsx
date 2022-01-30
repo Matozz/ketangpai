@@ -14,40 +14,45 @@ const tabTitle = [
   { title: "公告", contents: [] }
 ];
 
+const eventType = ["detail", "checkin", "file", "notice"];
+
 const CourseOverview = () => {
   const [params, setParams] = useState<any>({});
   const [current, setCurrent] = useState(0);
   const [tabList, setTabList] = useState(tabTitle);
 
   const loadDetails = (cid, viewType) => {
-    Taro.showLoading({ title: "加载中" });
-    Taro.cloud
-      .callFunction({
-        // 要调用的云函数名称
-        name: "get_detail",
-        // 传递给云函数的event参数
-        data: {
-          cid,
-          viewType
-        }
-      })
-      .then(({ result: { statusCode, message, list } }: any) => {
-        console.log({ statusCode, message, list });
-        let tabList = tabTitle.map((item, index) => {
-          if (index === 0) {
-            return { ...item, contents: list.flat(1) };
-          } else {
-            return { ...item, contents: list[index - 1] };
+    return new Promise((resolve, reject) => {
+      Taro.showLoading({ title: "加载中" });
+      Taro.cloud
+        .callFunction({
+          name: "get_detail",
+          data: {
+            cid,
+            viewType
           }
-        });
+        })
+        .then(({ result: { statusCode, message, list } }: any) => {
+          console.log({ statusCode, message, list });
+          let tabList = tabTitle.map((item, index) => {
+            if (index === 0) {
+              return { ...item, contents: list.flat(1) };
+            } else {
+              return { ...item, contents: list[index - 1] };
+            }
+          });
 
-        setTabList(tabList);
-        Taro.hideLoading();
-      })
-      .catch(err => {
-        console.log(err);
-        Taro.hideLoading();
-      });
+          setTabList(tabList);
+
+          Taro.hideLoading();
+          resolve("");
+        })
+        .catch(err => {
+          console.log(err);
+          Taro.hideLoading();
+          reject(err);
+        });
+    });
   };
 
   useReady(() => {
@@ -66,13 +71,17 @@ const CourseOverview = () => {
       itemList: ["开始上课", "创建考勤", "上传课件", "发布公告"]
     })
       .then(({ tapIndex }) => {
-        if (tapIndex == 0) {
-          console.log(tapIndex);
-        }
+        Taro.navigateTo({
+          url: `/pages/create_event/create_event?cid=${params.cid}&type=${eventType[tapIndex]}&premium=${params.premium}`
+        });
       })
       .catch(res => {
         console.log(res.errMsg);
       });
+
+  const handleListRefresh = async () => {
+    await loadDetails(params.cid, params.type);
+  };
 
   const options = [
     {
@@ -133,6 +142,8 @@ const CourseOverview = () => {
                     cardType="detail"
                     items={contents}
                     type={params.type}
+                    premium={parseInt(params.premium)}
+                    onRefresh={handleListRefresh}
                   />
                 ) : (
                   <View className="empty">

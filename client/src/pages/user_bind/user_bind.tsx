@@ -38,7 +38,7 @@ const UserBind = () => {
 
     Taro.cloud
       .callFunction({
-        name: "binduser",
+        name: "bind_user",
         data: {
           method: method,
           credits: {

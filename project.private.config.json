@@ -22,7 +22,21 @@
         {
           "name": "",
           "pathName": "pages/course_checkin/course_checkin",
-          "query": "_id=17e3426e61ebf80408e8d8f170fa3053&viewType=1",
+          "query": "_id=17e3426e61ebf80408e8d8f170fa3053&cid=6YERJ8PS&viewType=0&premium=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/course_checkin/course_checkin",
+          "query": "_id=41ae62ef61f16f46010778b70354e614&cid=6YERJ8PS&viewType=0&premium=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/create_event/create_event",
+          "query": "cid=6YERJ8PS&type=checkin&premium=1",
           "scene": null,
           "launchMode": "default"
         }

@@ -21,6 +21,7 @@ export interface CourseCardProps {
 export interface DetailCardProps {
   item: {
     _id: string;
+    cid: string;
     title: string;
     extra?: string;
     type: "detail" | "file" | "checkin" | "notice";
@@ -31,4 +32,5 @@ export interface DetailCardProps {
     finishTime?: string;
   };
   viewType: 0 | 1;
+  premium: number;
 }

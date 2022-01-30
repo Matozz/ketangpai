@@ -11,6 +11,7 @@ export default {
     "pages/user_bind/user_bind",
     "pages/courseware/courseware",
     "pages/course_create/course_create",
+    "pages/create_event/create_event",
     "pages/member/member"
   ],
   window: {
@@ -43,5 +44,10 @@ export default {
         // text: "我的"
       }
     ]
+  },
+  permission: {
+    "scope.userLocation": {
+      desc: "您的位置信息将用于小程序签到功能"
+    }
   }
 };

@@ -10,11 +10,13 @@ import "./CourseList.scss";
 const CourseList = ({
   cardType = "course",
   items = [],
+  premium,
   type,
   onRefresh
 }: {
   cardType?: "course" | "detail";
   items?: any;
+  premium?: number;
   type?: 0 | 1;
   onRefresh?: () => Promise<unknown>;
 }) => {
@@ -31,14 +33,8 @@ const CourseList = ({
   const handleRefresh = async () => {
     setRefreshing(true);
 
-    if (cardType == "course") {
-      await onRefresh();
-      setRefreshing(false);
-    } else {
-      setTimeout(() => {
-        setRefreshing(false);
-      }, 1000);
-    }
+    await onRefresh();
+    setRefreshing(false);
   };
 
   return (
@@ -64,10 +60,18 @@ const CourseList = ({
             cid={cid}
             type={type}
             options
+            key={cid}
           />
         ))}
       {cardType == "detail" &&
-        items.map(item => <DetailCard item={item} viewType={type} />)}
+        items.map(item => (
+          <DetailCard
+            item={item}
+            viewType={type}
+            premium={premium}
+            key={item._id}
+          />
+        ))}
       <View style="height:150rpx"></View>
       {/* <AtDivider
         height={150}

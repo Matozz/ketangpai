@@ -2,6 +2,8 @@ import { Text, View } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import React, { useEffect, useState } from "react";
 import { AtButton, AtCard, AtCountdown, AtTimeline } from "taro-ui";
+import { getGlobalData } from "../../data/global";
+import { getStudentCheckin, setCheckinFinish } from "../../db/checkin";
 import { DetailCardProps } from "../../types/type";
 import { formatTime, countdownTime } from "../../utils";
 
@@ -12,6 +14,7 @@ declare let wx: any;
 const DetailCard = ({
   item: {
     _id,
+    cid,
     title,
     extra,
     type,
@@ -21,13 +24,15 @@ const DetailCard = ({
     scheduleTime,
     finishTime
   },
-  viewType
+  viewType,
+  premium
 }: DetailCardProps) => {
   const [scheduledNote, setScheduledNote] = useState("");
   const [isCheckedin, setIsCheckedin] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [note, setNote] = useState(formatTime(new Date(scheduleTime)));
+  const [isTimeOverflow, setIsTimeOverflow] = useState(false);
   const [countdown, setCountdown] = useState<{
     hours?: number;
     minutes?: number;
@@ -42,9 +47,20 @@ const DetailCard = ({
     }
     if (type === "checkin") {
       let countdown = countdownTime(finishTime);
+      if (countdown.milliseconds > 360060000) {
+        setIsTimeOverflow(true);
+      }
       setCountdown(countdown.part);
       setIsFinished(countdown.isFinished);
-      setIsLoading(false);
+
+      getStudentCheckin(_id, getGlobalData("USERINFO")?.uid).then(
+        ({ data }) => {
+          if (data.length > 0) {
+            setIsCheckedin(true);
+          }
+          setIsLoading(false);
+        }
+      );
     }
   }, []);
 
@@ -52,37 +68,14 @@ const DetailCard = ({
     setIsFinished(true);
   };
 
-  const handleCheckin = () => {
-    wx.showModal({
-      title: "签到",
-      editable: true,
-      placeholderText: "请输入签到码",
-      confirmText: "确认",
-      success: res => {
-        if (res.confirm) {
-          console.log("用户点击确认");
-          setIsLoading(true);
-          setTimeout(() => {
-            Taro.showToast({
-              title: "签到成功",
-              icon: "success",
-              duration: 1500
-            });
-            setIsCheckedin(true);
-            setIsLoading(false);
-          }, 1000);
-        } else if (res.cancel) {
-          console.log("用户点击取消");
-        }
-      }
-    });
-  };
+  const handleCheckin = e => {};
 
-  const handleStopCheckin = () => {
+  const handleStopCheckin = e => {
+    e.stopPropagation();
     setIsLoading(true);
 
     // Database to change finishTime
-    setTimeout(() => {
+    setCheckinFinish(_id).then(() => {
       setCountdown({
         hours: 0,
         minutes: 0,
@@ -90,10 +83,11 @@ const DetailCard = ({
       });
       setIsFinished(true);
       setIsLoading(false);
-    }, 1000);
+    });
   };
 
-  const handleOpenFile = () => {
+  const handleOpenFile = e => {
+    e.stopPropagation();
     Taro.showLoading({ title: "文件加载中" });
     Taro.cloud.downloadFile({
       fileID,
@@ -112,7 +106,7 @@ const DetailCard = ({
 
   const handleCardClick = () => {
     Taro.navigateTo({
-      url: `/pages/course_${type}/course_${type}?_id=${_id}&viewType=${viewType}`
+      url: `/pages/course_${type}/course_${type}?_id=${_id}&cid=${cid}&viewType=${viewType}&premium=${premium}`
     });
   };
 
@@ -142,15 +136,21 @@ const DetailCard = ({
       {type === "checkin" && (
         <View>
           <View className="checkin_box">
-            <Text className="checkin_title">距离考勤结束还有：</Text>
-            <AtCountdown
-              isCard
-              format={{ hours: ":", minutes: ":", seconds: "" }}
-              hours={countdown.hours}
-              minutes={countdown.minutes}
-              seconds={countdown.seconds}
-              onTimeUp={handleCountDownTimeUp}
-            />
+            {isTimeOverflow ? (
+              <Text>考勤结束时间：{formatTime(new Date(finishTime))}</Text>
+            ) : (
+              <>
+                <Text className="checkin_title">距离考勤结束还有：</Text>
+                <AtCountdown
+                  isCard
+                  format={{ hours: ":", minutes: ":", seconds: "" }}
+                  hours={countdown.hours}
+                  minutes={countdown.minutes}
+                  seconds={countdown.seconds}
+                  onTimeUp={handleCountDownTimeUp}
+                />
+              </>
+            )}
           </View>
 
           {viewType == 0 ? (
