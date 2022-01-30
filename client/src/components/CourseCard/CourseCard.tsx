@@ -28,7 +28,7 @@ const CourseCard = ({
   const handleMenuClick = (e: ITouchEvent) => {
     e.stopPropagation();
     Taro.showActionSheet({
-      itemList: ["置顶", type == 0 ? "退出班级" : "删除课程"]
+      itemList: [type == 0 ? "退出班级" : "删除课程"]
     })
       .then(res => {
         console.log(res.tapIndex);

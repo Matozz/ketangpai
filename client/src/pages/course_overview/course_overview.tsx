@@ -91,10 +91,10 @@ const CourseOverview = () => {
     },
     {
       title: "课件库",
-      icon: "folder",
+      icon: "file-code",
       path: `/pages/courseware/courseware?cid=${params.cid}`
     },
-    { title: "分析", icon: "analytics" },
+    { title: "试卷库", icon: "folder" },
     { title: "设置", icon: "settings" }
   ];
 

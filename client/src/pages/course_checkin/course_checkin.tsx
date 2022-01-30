@@ -167,6 +167,43 @@ const CourseCheckin = () => {
   };
 
   /**
+   * 处理放弃考勤
+   */
+  const handleDropCheckin = checkin_id => {
+    Taro.showLoading({ title: "加载中" });
+    Taro.cloud
+      .callFunction({
+        name: "del_checkin",
+        data: {
+          checkin_id
+        }
+      })
+      .then(({ result: { statusCode, message } }: any) => {
+        if (statusCode == 200) {
+          Taro.hideLoading();
+          Taro.showToast({
+            title: "操作成功",
+            icon: "success",
+            duration: 1500
+          });
+          const timer = setTimeout(() => {
+            Taro.navigateBack({
+              delta: 1
+            });
+            clearTimeout(timer);
+          }, 1500);
+        } else {
+          Taro.hideLoading();
+          Taro.showToast({
+            title: message,
+            icon: "none",
+            duration: 1500
+          });
+        }
+      });
+  };
+
+  /**
    * 处理点击悬浮按钮
    */
   const handleFabClick = () => {
@@ -176,7 +213,27 @@ const CourseCheckin = () => {
       itemList: items
     })
       .then(({ tapIndex }) => {
-        if (tapIndex === 2) {
+        if (tapIndex == 1) {
+          wx.showModal({
+            title: '该操作不可恢复，请在输入框输入"确定放弃考勤"',
+            editable: true,
+            placeholderText: "确定放弃本次考勤",
+            confirmText: "确定",
+            success: res => {
+              if (res.confirm && res.content == "确定放弃本次考勤") {
+                handleDropCheckin(params._id);
+              } else if (res.cancel) {
+                console.log("用户点击取消");
+              } else {
+                Taro.showToast({
+                  title: "输入错误",
+                  icon: "none",
+                  duration: 1500
+                });
+              }
+            }
+          });
+        } else if (tapIndex === 2) {
           setIsLoading(true);
           setCheckinFinish(params._id).then(() => {
             setIsFinished(true);

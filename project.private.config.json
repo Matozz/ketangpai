@@ -37,6 +37,13 @@
           "name": "",
           "pathName": "pages/create_event/create_event",
           "query": "cid=6YERJ8PS&type=checkin&premium=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/course_detail/course_detail",
+          "query": "_id=bf4a0bf261ebf7f708daa8bf5fd3a65d&cid=6YERJ8PS&viewType=1&premium=1",
           "scene": null,
           "launchMode": "default"
         }
