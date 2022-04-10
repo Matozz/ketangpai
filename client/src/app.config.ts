@@ -12,7 +12,8 @@ export default {
     "pages/courseware/courseware",
     "pages/course_create/course_create",
     "pages/create_event/create_event",
-    "pages/member/member"
+    "pages/member/member",
+    "pages/checkin_detail/checkin_detail"
   ],
   window: {
     backgroundTextStyle: "light",

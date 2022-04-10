@@ -28,6 +28,7 @@ exports.main = async (event, context) => {
       cid,
       scheduleTime: viewType == 0 ? _.lte(new db.serverDate()) : undefined
     })
+    .orderBy('scheduleTime', 'desc')
     .get()
     .then(({
       data
@@ -42,6 +43,7 @@ exports.main = async (event, context) => {
       cid,
       scheduleTime: viewType == 0 ? _.lte(new db.serverDate()) : undefined
     })
+    .orderBy('scheduleTime', 'desc')
     .get()
     .then(({
       data
@@ -56,6 +58,7 @@ exports.main = async (event, context) => {
       cid,
       scheduleTime: viewType == 0 ? _.lte(new db.serverDate()) : undefined
     })
+    .orderBy('scheduleTime', 'desc')
     .get()
     .then(({
       data
@@ -70,6 +73,7 @@ exports.main = async (event, context) => {
       cid,
       scheduleTime: viewType == 0 ? _.lte(new db.serverDate()) : undefined
     })
+    .orderBy('scheduleTime', 'desc')
     .get()
     .then(({
       data

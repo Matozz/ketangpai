@@ -5,6 +5,7 @@ import { AtButton, AtList, AtListItem, AtTag } from "taro-ui";
 import { DefaultValue } from "../../data/default";
 import { setGlobalData, getGlobalData } from "../../data/global";
 import { UserInfo } from "../../types/type";
+import { Button } from "@taroify/core";
 
 import "./my.scss";
 
@@ -104,13 +105,9 @@ const My = () => {
           />
         </View>
         <View className="footer">
-          <AtButton
-            type="secondary"
-            size="small"
-            onClick={isAuthed ? () => {} : login}
-          >
+          <Button size="small" onClick={isAuthed ? () => {} : login}>
             {isAuthed ? "编辑个人资料" : "授权登录"}
-          </AtButton>
+          </Button>
           {isBinded && (
             <AtTag size="small">{userInfo.type == 0 ? "学生" : "教师"}</AtTag>
           )}

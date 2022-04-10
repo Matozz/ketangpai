@@ -1,4 +1,5 @@
-export default function formatTime(date) {
+export default function formatTime(date: any) {
+  if (!date) return "";
   let formatedTime = "yyyy-MM-dd hh:mm:ss";
   const o = {
     "M+": date.getMonth() + 1, // 月份

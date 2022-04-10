@@ -1,15 +1,9 @@
 {
-  "setting": {},
+  "setting": {
+    "compileHotReLoad": false,
+    "urlCheck": true
+  },
   "condition": {
-    "plugin": {
-      "list": []
-    },
-    "game": {
-      "list": []
-    },
-    "gamePlugin": {
-      "list": []
-    },
     "miniprogram": {
       "list": [
         {
@@ -44,10 +38,47 @@
           "name": "",
           "pathName": "pages/course_detail/course_detail",
           "query": "_id=bf4a0bf261ebf7f708daa8bf5fd3a65d&cid=6YERJ8PS&viewType=1&premium=1",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/create_event/create_event",
+          "query": "cid=6YERJ8PS&type=checkin&premium=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/create_event/create_event",
+          "query": "cid=6YERJ8PS&type=detail&premium=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/course_checkin/course_checkin",
+          "query": "_id=82afc00a62518f4b04067fe637a0077c&cid=6YERJ8PS&viewType=0&premium=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/checkin_detail/checkin_detail",
+          "query": "checkin_id=82afc00a62517f840404e44476a164bb",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/checkin_detail/checkin_detail",
+          "query": "checkin_id=d2fe6f2062524da30616e06135cd1125",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
-  }
+  },
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+  "libVersion": "2.23.0"
 }

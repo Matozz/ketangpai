@@ -94,6 +94,29 @@ page {
     }
   }
 
+  .quiz {
+    min-height: 300px;
+    padding: 40px 0;
+
+    & .text {
+      padding: 40rpx;
+      word-break: break-all;
+    }
+    &.student {
+      min-height: 350px;
+      .title {
+        margin: 30px;
+      }
+      .answer {
+        width: 100%;
+        background: #efefef;
+        padding: 20px;
+        box-sizing: border-box;
+        margin-bottom: 40px;
+      }
+    }
+  }
+
   .map {
     height: 700px;
     &.student {

@@ -16,6 +16,11 @@
 @import "~taro-ui/dist/style/components/countdown.scss";
 @import "~taro-ui/dist/style/components/switch.scss";
 
+page {
+  min-height:100vh;
+  background-color: #f8f8f8;
+}
+
 .at-tabs__item {
   font-weight: 500;
   font-size: 30px;
@@ -87,4 +92,8 @@
 
 .hidden {
   display: none;
+}
+
+.at-card {
+  margin: 24px;
 }

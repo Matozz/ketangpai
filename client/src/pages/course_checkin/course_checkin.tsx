@@ -1,3 +1,4 @@
+import { Textarea } from "@taroify/core";
 import { Image, Input, Map, Text, View } from "@tarojs/components";
 import Taro, { getCurrentInstance, useReady } from "@tarojs/taro";
 import React, { useEffect, useMemo, useState } from "react";
@@ -30,7 +31,8 @@ declare let wx: any;
 const CHECKIN_TYPE = {
   number: "数字",
   qrcode: "二维码",
-  gps: "GPS"
+  gps: "GPS",
+  quiz: "题目"
 };
 
 const UPDATE_TIME = 60 * 1000;
@@ -49,14 +51,16 @@ const CourseCheckin = () => {
   });
   const [qrcode, setQRCode] = useState({ data: "", timestamp: 0 });
   const [number, setNumber] = useState("0000");
+  const [quiz, setQuiz] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [textareaInputValue, setTextAreaValue] = useState("");
   const [circle, setCircle] = useState([
     {
       latitude: 24.624168,
       longitude: 118.087555,
       color: "#5383eb",
       fillColor: "#7cb5ec88",
-      radius: 160,
+      radius: 150,
       strokeWidth: 2
     }
   ]);
@@ -121,6 +125,8 @@ const CourseCheckin = () => {
           const { content, checkinType } = detail;
           if (checkinType == "number") {
             setNumber(content);
+          } else if (checkinType == "quiz") {
+            setQuiz(content);
           } else if (checkinType == "qrcode") {
             setQRCode({ timestamp: Date.now() + UPDATE_TIME, data: content });
             if (viewType == "1") {
@@ -213,7 +219,11 @@ const CourseCheckin = () => {
       itemList: items
     })
       .then(({ tapIndex }) => {
-        if (tapIndex == 1) {
+        if (tapIndex === 0) {
+          Taro.navigateTo({
+            url: `/pages/checkin_detail/checkin_detail?checkin_id=${params._id}`
+          });
+        } else if (tapIndex == 1) {
           wx.showModal({
             title: '该操作不可恢复，请在输入框输入"确定放弃考勤"',
             editable: true,
@@ -259,10 +269,10 @@ const CourseCheckin = () => {
         if (confirm) {
           let range = parseInt(content);
 
-          if (range < 20 || range > 5000) {
+          if (range < 20 || range > 500) {
             Taro.showModal({
               title: "更改范围失败",
-              content: "请输入大于20小于5000的数字",
+              content: "请输入大于20小于500的数字",
               showCancel: false
             });
             return;
@@ -338,6 +348,13 @@ const CourseCheckin = () => {
    */
   const handleChangeInput = e => {
     setInputValue(e.detail.value);
+  };
+
+  /**
+   * 处理学生题目回答的输入事件
+   */
+  const handleTextAreaInput = e => {
+    setTextAreaValue(e.detail.value);
   };
 
   /**
@@ -492,6 +509,36 @@ const CourseCheckin = () => {
       });
   };
 
+  /**
+   * 获取输入内容进行数字签到
+   */
+  const handleCheckinByQuiz = () => {
+    Taro.cloud
+      .callFunction({
+        name: "student_checkin",
+        data: {
+          type: "quiz",
+          checkin_id: params._id,
+          uid: getGlobalData("USERINFO")?.uid,
+          body: {
+            content: textareaInputValue
+          }
+        }
+      })
+      .then(({ result: { statusCode, message } }: any) => {
+        if (statusCode === 200) {
+          setIsCheckedin(true);
+        }
+
+        Taro.hideLoading();
+        Taro.showToast({
+          title: message,
+          icon: statusCode === 200 ? "success" : "none",
+          duration: 1500
+        });
+      });
+  };
+
   useReady(() => {
     let { _id, cid, viewType, premium } = getCurrentInstance().router.params;
     setParams({ _id, cid, viewType, premium });
@@ -552,6 +599,35 @@ const CourseCheckin = () => {
                         <AtButton
                           type="primary"
                           onClick={handleCheckinByNumber}
+                        >
+                          签到
+                        </AtButton>
+                      </View>
+                    ))}
+
+                  {checkinDetail.checkinType == "quiz" &&
+                    (params.viewType == 1 ? (
+                      <View className="checkin quiz">
+                        <View className="title">学生通过回答问题完成签到</View>
+                        {/* <View className="change" onClick={handleChangeNumber}>
+                          更换题目
+                        </View> */}
+                        <View className="text">{quiz}</View>
+                      </View>
+                    ) : (
+                      <View className="checkin quiz student">
+                        <View>{quiz}</View>
+                        <View className="title">请输入答案</View>
+                        <Textarea
+                          className="answer"
+                          placeholder="请输入答案"
+                          value={textareaInputValue}
+                          onInput={handleTextAreaInput}
+                        />
+                        <AtButton
+                          type="primary"
+                          disabled={!textareaInputValue}
+                          onClick={handleCheckinByQuiz}
                         >
                           签到
                         </AtButton>
