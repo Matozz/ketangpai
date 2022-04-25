@@ -8,11 +8,19 @@ import "./CommentList.scss";
 
 const CommentList = ({ event_type, event_id }) => {
   const [comments, setComments] = useState([]);
+  const [onLoading, setOnLoading] = useState(true);
+
+  useEffect(() => {
+    if (event_type && event_id) {
+      getComments(event_id, event_type).then((res: any) => {
+        setComments(res?.data ?? []);
+        setOnLoading(false);
+      });
+    }
+  }, [event_type, event_id, onLoading]);
 
   useDidShow(() => {
-    getComments(event_id, event_type).then((res: any) =>
-      setComments(res?.data ?? [])
-    );
+    setOnLoading(true);
   });
 
   return (
