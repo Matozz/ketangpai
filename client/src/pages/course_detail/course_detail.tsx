@@ -26,12 +26,17 @@ const CourseDetail = () => {
   };
 
   const handleFabClick = () => {
-    let items = ["删除课程"];
+    let items = ["发表评论", "删除课程"];
     Taro.showActionSheet({
       itemList: items
     })
       .then(({ tapIndex }) => {
         console.log(tapIndex);
+        if (tapIndex === 0) {
+          Taro.navigateTo({
+            url: `/pages/comment/comment?event_type=course&event_id=${params._id}`
+          });
+        }
       })
       .catch(err => console.log(err));
   };
@@ -64,7 +69,7 @@ const CourseDetail = () => {
         </View>
       )}
 
-      <CommentList />
+      <CommentList event_type="course" event_id={params._id} />
 
       {params.viewType == 1 && (
         <View className="fab_btn">

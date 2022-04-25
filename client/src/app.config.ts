@@ -13,7 +13,8 @@ export default {
     "pages/course_create/course_create",
     "pages/create_event/create_event",
     "pages/member/member",
-    "pages/checkin_detail/checkin_detail"
+    "pages/checkin_detail/checkin_detail",
+    "pages/comment/comment"
   ],
   window: {
     backgroundTextStyle: "light",

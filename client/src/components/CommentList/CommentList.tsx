@@ -1,19 +1,26 @@
 import { Text, View } from "@tarojs/components";
-import React from "react";
+import { useDidShow } from "@tarojs/taro";
+import React, { useEffect, useState } from "react";
 import { CommentCard } from "..";
+import { getComments } from "../../db/comment";
 
 import "./CommentList.scss";
 
-const CommentList = () => {
+const CommentList = ({ event_type, event_id }) => {
+  const [comments, setComments] = useState([]);
+
+  useDidShow(() => {
+    getComments(event_id, event_type).then((res: any) =>
+      setComments(res?.data ?? [])
+    );
+  });
+
   return (
     <View className="comments">
       <Text className="title">评论</Text>
-      <CommentCard />
-      <CommentCard />
-      <CommentCard />
-      <CommentCard />
-      <CommentCard />
-      <CommentCard />
+      {comments.map((comment: any) => (
+        <CommentCard {...comment} />
+      ))}
     </View>
   );
 };

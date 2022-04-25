@@ -213,7 +213,7 @@ const CourseCheckin = () => {
    * 处理点击悬浮按钮
    */
   const handleFabClick = () => {
-    let items = ["考勤详情", "放弃考勤"];
+    let items = ["发表评论", "考勤详情", "放弃考勤"];
     if (!isFinished) items.push("结束考勤");
     Taro.showActionSheet({
       itemList: items
@@ -221,9 +221,13 @@ const CourseCheckin = () => {
       .then(({ tapIndex }) => {
         if (tapIndex === 0) {
           Taro.navigateTo({
+            url: `/pages/comment/comment?event_type=checkin&event_id=${params._id}`
+          });
+        } else if (tapIndex === 1) {
+          Taro.navigateTo({
             url: `/pages/checkin_detail/checkin_detail?checkin_id=${params._id}`
           });
-        } else if (tapIndex == 1) {
+        } else if (tapIndex == 2) {
           wx.showModal({
             title: '该操作不可恢复，请在输入框输入"确定放弃考勤"',
             editable: true,
@@ -243,7 +247,7 @@ const CourseCheckin = () => {
               }
             }
           });
-        } else if (tapIndex === 2) {
+        } else if (tapIndex === 3) {
           setIsLoading(true);
           setCheckinFinish(params._id).then(() => {
             setIsFinished(true);
@@ -705,7 +709,7 @@ const CourseCheckin = () => {
         </View>
       )}
 
-      <CommentList />
+      <CommentList event_type="checkin" event_id={params._id} />
 
       {params.viewType == 1 && (
         <View className="fab_btn">

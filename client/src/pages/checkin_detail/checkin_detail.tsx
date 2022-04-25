@@ -45,6 +45,7 @@ const CheckinDetail = () => {
 
     loadDetail(checkin_id);
   });
+
   return (
     <View className="checkin_detail">
       <AtList>
@@ -88,3 +89,4 @@ const CheckinDetail = () => {
 };
 
 export default CheckinDetail;
+
