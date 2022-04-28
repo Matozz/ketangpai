@@ -26,7 +26,12 @@ const CourseDetail = () => {
   };
 
   const handleFabClick = () => {
-    let items = ["发表评论", "删除课程"];
+    let items = ["发表评论"];
+
+    if (params.viewType == 1) {
+      items = items.concat(["删除课程"]);
+    }
+
     Taro.showActionSheet({
       itemList: items
     })
@@ -71,13 +76,11 @@ const CourseDetail = () => {
 
       <CommentList event_type="course" event_id={params._id} />
 
-      {params.viewType == 1 && (
-        <View className="fab_btn">
-          <AtFab onClick={handleFabClick}>
-            <Text className="at-fab__icon at-icon at-icon-menu"></Text>
-          </AtFab>
-        </View>
-      )}
+      <View className="fab_btn">
+        <AtFab onClick={handleFabClick}>
+          <Text className="at-fab__icon at-icon at-icon-menu"></Text>
+        </AtFab>
+      </View>
     </View>
   );
 };

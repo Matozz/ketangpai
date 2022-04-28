@@ -213,8 +213,13 @@ const CourseCheckin = () => {
    * 处理点击悬浮按钮
    */
   const handleFabClick = () => {
-    let items = ["发表评论", "考勤详情", "放弃考勤"];
-    if (!isFinished) items.push("结束考勤");
+    let items = ["发表评论"];
+
+    if (params.viewType == 1) {
+      items = items.concat(["考勤详情", "放弃考勤"]);
+      if (!isFinished) items.push("结束考勤");
+    }
+
     Taro.showActionSheet({
       itemList: items
     })
@@ -711,13 +716,11 @@ const CourseCheckin = () => {
 
       <CommentList event_type="checkin" event_id={params._id} />
 
-      {params.viewType == 1 && (
-        <View className="fab_btn">
-          <AtFab onClick={handleFabClick}>
-            <Text className="at-fab__icon at-icon at-icon-menu"></Text>
-          </AtFab>
-        </View>
-      )}
+      <View className="fab_btn">
+        <AtFab onClick={handleFabClick}>
+          <Text className="at-fab__icon at-icon at-icon-menu"></Text>
+        </AtFab>
+      </View>
     </View>
   );
 };

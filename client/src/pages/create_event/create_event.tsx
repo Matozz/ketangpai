@@ -1,9 +1,12 @@
+import { Button } from "@taroify/core";
 import { Map, Picker, Text, View } from "@tarojs/components";
 import Taro, { getCurrentInstance, useReady } from "@tarojs/taro";
 import React, { useMemo, useState } from "react";
 import { AtButton, AtInput, AtList, AtListItem, AtSwitch } from "taro-ui";
 import CheckinForm from "../../components/CheckinForm/CheckinForm";
 import CreateCourse from "../../components/CreateCourse/CreateCourse";
+import FileForm from "../../components/FileForm/FileForm";
+import { createFile } from "../../db/file";
 
 import "./create_event.scss";
 
@@ -123,13 +126,53 @@ const CreateEvent = () => {
       });
   };
 
+  const handleCreateFile = (values: any) => {
+    Taro.showLoading({ title: "创建中" });
+    console.log(values);
+    Taro.cloud
+      .uploadFile({
+        cloudPath: values.name,
+        filePath: values.path // 文件路径
+      })
+      .then(res => {
+        // get resource ID
+        console.log(res.fileID);
+        return createFile({
+          name: values.name,
+          fileID: res.fileID,
+          title: values.title,
+          content: values.content,
+          cid
+        });
+      })
+      .then(() => {
+        Taro.hideLoading();
+        Taro.showToast({
+          title: "创建成功",
+          icon: "success",
+          duration: 1500
+        });
+        const timer = setTimeout(() => {
+          Taro.navigateBack();
+          clearTimeout(timer);
+        }, 1500);
+      })
+      .catch(error => {
+        // handle error
+      });
+  };
+
   return (
     <View className="create_event">
       {type === "detail" && <CreateCourse onSubmit={handleCreateCourse} />}
       {type === "checkin" && (
         <CheckinForm type="create" onSubmit={handleCreateCheckin} />
       )}
-      {type === "file" && <View></View>}
+      {type === "file" && (
+        <View>
+          <FileForm onSubmit={handleCreateFile} />
+        </View>
+      )}
 
       {type === "notice" && <View></View>}
     </View>

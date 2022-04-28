@@ -62,8 +62,6 @@ const CourseOverview = () => {
     Taro.setNavigationBarTitle({ title: name });
   });
 
-  useDidShow(() => {});
-
   const handleTabClick = useCallback(value => setCurrent(value), [current]);
 
   const handleFabClick = () =>
@@ -82,6 +80,8 @@ const CourseOverview = () => {
   const handleListRefresh = async () => {
     await loadDetails(params.cid, params.type);
   };
+
+  useDidShow(() => handleListRefresh());
 
   const options = [
     {
