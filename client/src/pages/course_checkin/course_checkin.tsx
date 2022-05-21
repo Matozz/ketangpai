@@ -234,7 +234,7 @@ const CourseCheckin = () => {
           });
         } else if (tapIndex == 2) {
           wx.showModal({
-            title: '该操作不可恢复，请在输入框输入"确定放弃考勤"',
+            title: '该操作不可恢复，请在输入框输入"确定放弃本次考勤"',
             editable: true,
             placeholderText: "确定放弃本次考勤",
             confirmText: "确定",

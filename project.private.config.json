@@ -75,6 +75,27 @@
           "query": "checkin_id=d2fe6f2062524da30616e06135cd1125",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/course_checkin/course_checkin",
+          "query": "_id=807102f662519fa305959315014651f9&cid=IKAHM35P&viewType=1&premium=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/create_event/create_event",
+          "query": "cid=JBDA6WQO&type=file&premium=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/message/message",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

@@ -12,7 +12,15 @@ const db = cloud.database();
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
 
-  let { checkinType, cid, title, desc, schedule, finish, content } = event;
+  let {
+    checkinType,
+    cid,
+    title,
+    desc,
+    schedule,
+    finish,
+    content
+  } = event;
 
   let statusCode, message, checkin_id;
 
@@ -34,19 +42,23 @@ exports.main = async (event, context) => {
     content = stringRandom(16);
   }
 
+  const event_info = {
+    checkinType,
+    title,
+    extra: desc,
+    scheduleTime: new Date(schedule),
+    finishTime: new Date(finish),
+  }
+
   await db
     .collection("class_checkins")
     .add({
       data: {
-        checkinType,
         cid,
-        title,
-        extra: desc,
-        createTime: db.serverDate(),
-        scheduleTime: new Date(schedule),
-        finishTime: new Date(finish),
         type: "checkin",
         content,
+        createTime: db.serverDate(),
+        ...event_info,
       },
     })
     .then((res) => {
@@ -54,6 +66,16 @@ exports.main = async (event, context) => {
       message = "创建成功";
       checkin_id = res._id;
     });
+
+  cloud.callFunction({
+    name: "dispatch_notification",
+    data: {
+      cid,
+      event_id: checkin_id,
+      event_type: 'checkin',
+      event_info
+    },
+  });
 
   return {
     statusCode,

@@ -37,14 +37,28 @@ const formatTime = (date) => {
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
 
-  let { cid, info, checkin } = event;
+  let {
+    cid,
+    info,
+    checkin
+  } = event;
 
   if (checkin[0]) {
-    const { checkinType, title, desc, content, startTime, finishTime } =
-      checkin[0];
+    const {
+      checkinType,
+      title,
+      desc,
+      content,
+      startTime,
+      finishTime
+    } =
+    checkin[0];
 
     const {
-      result: { statusCode, message },
+      result: {
+        statusCode,
+        message
+      },
     } = await cloud.callFunction({
       name: "create_checkin",
       data: {
@@ -75,21 +89,32 @@ exports.main = async (event, context) => {
     desc: _desc,
   } = info.infoConfig;
 
-  const _detail_content = [
-    { content: [_startTime], title: "开始上课" },
-    { content: [_finishTime], title: "下课" },
-    ...(info.testConfig
-      ? [
-          { content: [info.testConfig.startTime], title: "课堂小测开始" },
-          { content: [info.testConfig.finishTime], title: "课堂小测截止" },
-        ]
-      : []),
-    ...(info.workConfig
-      ? [
-          { content: [info.workConfig.startTime], title: "作业提交开始" },
-          { content: [info.workConfig.finishTime], title: "作业提交截止" },
-        ]
-      : []),
+  const _detail_content = [{
+      content: [_startTime],
+      title: "开始上课"
+    },
+    {
+      content: [_finishTime],
+      title: "下课"
+    },
+    ...(info.testConfig ? [{
+        content: [info.testConfig.startTime],
+        title: "课堂小测开始"
+      },
+      {
+        content: [info.testConfig.finishTime],
+        title: "课堂小测截止"
+      },
+    ] : []),
+    ...(info.workConfig ? [{
+        content: [info.workConfig.startTime],
+        title: "作业提交开始"
+      },
+      {
+        content: [info.workConfig.finishTime],
+        title: "作业提交截止"
+      },
+    ] : []),
   ];
 
   const detail_content = _detail_content
@@ -101,17 +126,21 @@ exports.main = async (event, context) => {
       title: item.title,
     }));
 
+  const event_info = {
+    title: _title,
+    extra: _desc,
+    content: detail_content,
+    scheduleTime: new Date(_startTime),
+  }
+
   await db
     .collection("class_details")
     .add({
       data: {
         cid,
-        title: _title,
-        extra: _desc,
         createTime: db.serverDate(),
-        scheduleTime: new Date(_startTime),
         type: "detail",
-        content: detail_content,
+        ...event_info,
       },
     })
     .then((res) => {
@@ -119,6 +148,16 @@ exports.main = async (event, context) => {
       _message = "创建成功";
       detail_id = res._id;
     });
+
+  cloud.callFunction({
+    name: "dispatch_notification",
+    data: {
+      cid,
+      event_id: detail_id,
+      event_type: 'detail',
+      event_info
+    },
+  });
 
   return {
     statusCode: _statusCode,
