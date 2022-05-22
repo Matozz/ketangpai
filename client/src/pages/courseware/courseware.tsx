@@ -1,23 +1,34 @@
 import { Text, View } from "@tarojs/components";
-import Taro, { usePullDownRefresh } from "@tarojs/taro";
-import React from "react";
+import Taro, { useDidShow, usePullDownRefresh } from "@tarojs/taro";
+import React, { useState } from "react";
 import { AtCard } from "taro-ui";
+import { getGlobalData } from "../../data/global";
+import { formatTime } from "../../utils";
 
 import "./courseware.scss";
 
 const Courseware = () => {
-  usePullDownRefresh(() => {
-    console.log("onPullDownRefresh");
-    setTimeout(() => {
-      Taro.stopPullDownRefresh();
-    }, 1500);
+  const [fileList, setFileList] = useState<any>([]);
+  useDidShow(async () => {
+    Taro.showLoading({ title: "加载中" });
+    const {
+      result: { fileList: data }
+    }: any = await Taro.cloud.callFunction({
+      name: "get_file",
+      data: {
+        uid: getGlobalData("USERINFO").uid,
+        type: getGlobalData("USERINFO").type
+      }
+    });
+
+    setFileList(data);
+    Taro.hideLoading();
   });
 
-  const handleClickFileCard = () => {
+  const handleClickFileCard = fileID => {
     Taro.showLoading({ title: "文件加载中" });
     Taro.cloud.downloadFile({
-      fileID:
-        "cloud1-7gweoaho6f4398d8.636c-cloud1-7gweoaho6f4398d8-1309227766/Chapter 3&4 语义建模 .pptx",
+      fileID,
       success: function(res) {
         const filePath = res.tempFilePath;
         Taro.openDocument({
@@ -30,45 +41,20 @@ const Courseware = () => {
       }
     });
   };
-  const handleClickFileCard2 = () => {
-    Taro.showLoading({ title: "文件加载中" });
-    Taro.cloud.downloadFile({
-      fileID:
-        "cloud1-7gweoaho6f4398d8.636c-cloud1-7gweoaho6f4398d8-1309227766/WebSocket在实时消息推送中的应用设计与实现_吴绍卫.pdf",
-      success: function(res) {
-        const filePath = res.tempFilePath;
-        Taro.openDocument({
-          filePath: filePath,
-          success: function(res) {
-            console.log("打开文档成功");
-            Taro.hideLoading();
-          }
-        });
-      }
-    });
-  };
+
   return (
     <View className="courseware">
-      <AtCard
-        className="file-card"
-        note="2022/1/20 18:48:00"
-        extra="PPTX"
-        title="从渲染原理到性能优化"
-        // thumb="https://icon-library.com/images/ppt-icon/ppt-icon-1.jpg"
-        onClick={handleClickFileCard}
-      >
-        这也是内容区 可以随意定义功能
-      </AtCard>
-      <AtCard
-        className="file-card"
-        note="2022/1/20 18:48:00"
-        extra="PDF"
-        title="2022汤家凤线性代数辅导讲义"
-        // thumb="https://freeiconshop.com/wp-content/uploads/edd/pdf-flat.png"
-        onClick={handleClickFileCard2}
-      >
-        这也是内容区 可以随意定义功能
-      </AtCard>
+      {fileList.map(item => (
+        <AtCard
+          className="file-card"
+          note={formatTime(new Date(item.scheduleTime))}
+          extra={item.extra}
+          title={item.title}
+          onClick={() => handleClickFileCard(item.fileID)}
+        >
+          <View>来自课程：{item.class.name}</View>
+        </AtCard>
+      ))}
     </View>
   );
 };

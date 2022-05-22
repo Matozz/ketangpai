@@ -1,5 +1,5 @@
 // 云函数入口文件
-const cloud = require('wx-server-sdk')
+const cloud = require("wx-server-sdk");
 
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV,
@@ -9,31 +9,38 @@ const db = cloud.database();
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  const wxContext = cloud.getWXContext()
+  const wxContext = cloud.getWXContext();
 
-  let statusCode, message, messageList = []
+  let { uid } = event;
 
-  const res = await db.collection("comments")
+  let statusCode,
+    message,
+    messageList = [];
+
+  const res = await db
+    .collection("comments")
     .aggregate()
     .match({
-      user_type: "0"
+      user_type: "0",
     })
     .lookup({
       from: "classes",
       localField: "cid",
       foreignField: "cid",
-      as: "class"
+      as: "class",
     })
     .unwind("$class")
+    .match(uid ? { "class.uid": uid } : { "class._openid": wxContext.OPENID })
     .project({
       _openid: 0,
       _id: 0,
       "class._id": 0,
-      "class._openid": 0
+      "class._openid": 0,
     })
-    .end()
 
-  messageList = res.list
+    .end();
+
+  messageList = res.list;
 
   statusCode = 200;
   message = "REQUEST SUCCESS";
@@ -41,6 +48,6 @@ exports.main = async (event, context) => {
   return {
     statusCode,
     message,
-    messageList
-  }
-}
+    messageList,
+  };
+};

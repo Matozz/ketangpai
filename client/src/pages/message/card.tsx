@@ -47,8 +47,8 @@ const EventCard = ({ item }) => {
   return (
     <AtCard
       note={formatTime(new Date(createTime))}
-      extra={`${eventMap[event_type][checkinType ?? "_"]}提醒`}
-      title={class_name}
+      extra={class_name}
+      title={`${eventMap[event_type][checkinType ?? "_"]}提醒`}
       onClick={handleCardClick}
     >
       {event_type === "checkin" && (

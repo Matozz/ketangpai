@@ -105,9 +105,12 @@ const My = () => {
           />
         </View>
         <View className="footer">
-          <Button size="small" onClick={isAuthed ? () => {} : login}>
-            {isAuthed ? "编辑个人资料" : "授权登录"}
-          </Button>
+          {!isAuthed && (
+            <Button size="small" onClick={login}>
+              授权登录
+            </Button>
+          )}
+
           {isBinded && (
             <AtTag size="small">{userInfo.type == 0 ? "学生" : "教师"}</AtTag>
           )}
@@ -124,13 +127,10 @@ const My = () => {
         <AtListItem
           title="我的试卷库"
           arrow="right"
+          onClick={handleNavigate("courseware")}
           iconInfo={{ size: 25, color: "#6190E8", value: "folder" }}
         />
-        <AtListItem
-          title="我的收藏"
-          arrow="right"
-          iconInfo={{ size: 25, color: "#6190E8", value: "heart" }}
-        />
+
         <AtListItem
           title="身份绑定"
           arrow="right"
@@ -138,18 +138,12 @@ const My = () => {
           onClick={handleNavigate("user_bind")}
           iconInfo={{ size: 25, color: "#6190E8", value: "user" }}
         />
-        <AtListItem
+        {/* <AtListItem
           title="考勤提醒"
           arrow="right"
           extraText="开启"
           iconInfo={{ size: 25, color: "#6190E8", value: "bell" }}
-        />
-
-        <AtListItem
-          title="帮助"
-          arrow="right"
-          iconInfo={{ size: 25, color: "#6190E8", value: "help" }}
-        />
+        /> */}
       </AtList>
     </View>
   );

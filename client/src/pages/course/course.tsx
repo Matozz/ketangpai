@@ -14,7 +14,7 @@ declare let wx: any;
 const tabList = [{ title: "我教的课" }, { title: "我听的课" }];
 const options = [
   { title: "课件库", icon: "file-code", path: "/pages/courseware/courseware" },
-  { title: "试卷库", icon: "folder" },
+  { title: "试卷库", icon: "folder", path: "/pages/courseware/courseware" },
   { title: "收藏", icon: "heart" }
 ];
 
@@ -186,7 +186,7 @@ const Course = () => {
 
   return (
     <View className="index">
-      <OptionsBar options={options} />
+      {/* <OptionsBar options={options} /> */}
 
       {isLoading ? (
         <View className="loading">

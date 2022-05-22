@@ -34,7 +34,9 @@ const Message = () => {
           result: { statusCode, message, messageList }
         }: any = await Taro.cloud.callFunction({
           name: "get_message",
-          data: {}
+          data: {
+            uid: getGlobalData("USERINFO").uid
+          }
         });
 
         setMessage(messageList);

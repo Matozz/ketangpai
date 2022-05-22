@@ -26,7 +26,9 @@ exports.main = async (event, context) => {
   await db.collection('class_details')
     .where({
       cid,
-      scheduleTime: viewType == 0 ? _.lte(new db.serverDate()) : undefined
+      ...(viewType == 0 ? {
+        scheduleTime: _.lte(new db.serverDate())
+      } : {})
     })
     .orderBy('scheduleTime', 'desc')
     .get()
@@ -41,7 +43,9 @@ exports.main = async (event, context) => {
   await db.collection('class_files')
     .where({
       cid,
-      scheduleTime: viewType == 0 ? _.lte(new db.serverDate()) : undefined
+      ...(viewType == 0 ? {
+        scheduleTime: _.lte(new db.serverDate())
+      } : {})
     })
     .orderBy('scheduleTime', 'desc')
     .get()
@@ -56,7 +60,9 @@ exports.main = async (event, context) => {
   await db.collection('class_checkins')
     .where({
       cid,
-      scheduleTime: viewType == 0 ? _.lte(new db.serverDate()) : undefined
+      ...(viewType == 0 ? {
+        scheduleTime: _.lte(new db.serverDate())
+      } : {})
     })
     .orderBy('scheduleTime', 'desc')
     .get()
@@ -71,7 +77,9 @@ exports.main = async (event, context) => {
   await db.collection('class_notices')
     .where({
       cid,
-      scheduleTime: viewType == 0 ? _.lte(new db.serverDate()) : undefined
+      ...(viewType == 0 ? {
+        scheduleTime: _.lte(new db.serverDate())
+      } : {})
     })
     .orderBy('scheduleTime', 'desc')
     .get()
@@ -89,7 +97,7 @@ exports.main = async (event, context) => {
   return {
     statusCode,
     message,
-    list:[
+    list: [
       detailList,
       fileList,
       checkinList,

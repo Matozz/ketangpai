@@ -13,7 +13,10 @@ const $ = db.command.aggregate;
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
 
-  let { uid, type } = event;
+  let {
+    uid,
+    type
+  } = event;
 
   let statusCode,
     message,
@@ -25,7 +28,7 @@ exports.main = async (event, context) => {
       .collection("class_links")
       .aggregate()
       .match({
-        uid: uid,
+        uid
       })
       .lookup({
         from: "class_links",
@@ -65,7 +68,9 @@ exports.main = async (event, context) => {
       .unwind("$class")
       .unwind("$user")
       .end()
-      .then(({ list }) => {
+      .then(({
+        list
+      }) => {
         if (list.length > 0) {
           // console.log(list);
           techList = list.filter((item) => item.type == 1);
@@ -83,7 +88,7 @@ exports.main = async (event, context) => {
       .collection("class_links")
       .aggregate()
       .match({
-        _openid: "o67RG5e80GwIT4ihFGKZVPm4CcME",
+        _openid: wxContext.OPENID,
         uid: type == 0 ? null : undefined,
       })
       .lookup({
@@ -135,7 +140,9 @@ exports.main = async (event, context) => {
         "user.password": 0,
       })
       .end()
-      .then(({ list }) => {
+      .then(({
+        list
+      }) => {
         if (list.length > 0) {
           // console.log(list);
           techList = [...techList, ...list.filter((item) => item.type == 1)];
@@ -205,7 +212,9 @@ exports.main = async (event, context) => {
         "user.password": 0,
       })
       .end()
-      .then(({ list }) => {
+      .then(({
+        list
+      }) => {
         if (list.length > 0) {
           // console.log(list);
           techList = list.filter((item) => item.type == 1);
