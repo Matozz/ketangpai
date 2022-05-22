@@ -13,8 +13,7 @@ import "./create_event.scss";
 const EVENT_TYPE = {
   detail: "开始上课",
   checkin: "创建考勤",
-  file: "上传课件",
-  notice: "发布公告"
+  file: "上传课件"
 };
 
 const CreateEvent = () => {

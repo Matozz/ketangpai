@@ -11,20 +11,23 @@ const CheckinDetail = () => {
   const [params, setParams] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
   const [checkinList, setCheckinList] = useState([]);
+  const [unCheckinList, setUnCheckinList] = useState([]);
 
-  const loadDetail = _id => {
+  const loadDetail = (_id, cid) => {
     setIsLoading(true);
     Taro.cloud
       .callFunction({
         name: "get_checkin_detail",
         data: {
-          _id
+          _id,
+          cid
         }
       })
-      .then(({ result: { statusCode, detail, message } }: any) => {
-        console.log({ statusCode, detail, message });
+      .then(({ result: { statusCode, detail, extra, message } }: any) => {
+        console.log({ statusCode, detail, message, extra });
         if (statusCode === 200) {
           setCheckinList(detail);
+          setUnCheckinList(extra);
           Taro.hideLoading();
         }
       })
@@ -40,10 +43,10 @@ const CheckinDetail = () => {
   };
 
   useReady(() => {
-    let { checkin_id } = getCurrentInstance().router.params;
-    setParams({ checkin_id });
+    let { checkin_id, cid } = getCurrentInstance().router.params;
+    setParams({ checkin_id, cid });
 
-    loadDetail(checkin_id);
+    loadDetail(checkin_id, cid);
   });
 
   return (
@@ -55,7 +58,14 @@ const CheckinDetail = () => {
           const isGps = typeof content === "object";
 
           return (
-            <View style={{ padding: "32rpx" }}>
+            <View
+              style={{
+                padding: "32rpx",
+                borderBottomWidth: 1,
+                borderBottomStyle: "solid",
+                borderColor: "#e6e6e6"
+              }}
+            >
               <View
                 style={{
                   display: "flex",
@@ -84,9 +94,47 @@ const CheckinDetail = () => {
           );
         })}
       </AtList>
+
+      {unCheckinList.length > 0 && (
+        <>
+          <View style={{ padding: 16 }}>未签到</View>
+          <AtList className="checkin_detail">
+            {unCheckinList.map(item => {
+              const { realName, avatarUrl } = item;
+
+              return (
+                <View
+                  style={{
+                    padding: "32rpx",
+                    borderBottomWidth: 1,
+                    borderBottomStyle: "solid",
+                    borderColor: "#e6e6e6"
+                  }}
+                >
+                  <View
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center"
+                    }}
+                  >
+                    <Image
+                      style={{ width: "60rpx", height: "60rpx" }}
+                      mode="scaleToFill"
+                      src={avatarUrl}
+                    />
+                    <Text style={{ flex: 1, marginLeft: "32rpx" }}>
+                      {realName}
+                    </Text>
+                  </View>
+                </View>
+              );
+            })}
+          </AtList>
+        </>
+      )}
     </View>
   );
 };
 
 export default CheckinDetail;
-

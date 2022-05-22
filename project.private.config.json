@@ -96,6 +96,13 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/checkin_detail/checkin_detail",
+          "query": "checkin_id=0ab5303b628a30b805379313486029bc&cid=3ANYD236",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

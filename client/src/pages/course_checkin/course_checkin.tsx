@@ -230,7 +230,7 @@ const CourseCheckin = () => {
           });
         } else if (tapIndex === 1) {
           Taro.navigateTo({
-            url: `/pages/checkin_detail/checkin_detail?checkin_id=${params._id}`
+            url: `/pages/checkin_detail/checkin_detail?checkin_id=${params._id}&cid=${params.cid}`
           });
         } else if (tapIndex == 2) {
           wx.showModal({

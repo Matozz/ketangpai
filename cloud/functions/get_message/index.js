@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
     .collection("comments")
     .aggregate()
     .match({
-      user_type: "0",
+      user_type: 0,
     })
     .lookup({
       from: "classes",
@@ -37,7 +37,6 @@ exports.main = async (event, context) => {
       "class._id": 0,
       "class._openid": 0,
     })
-
     .end();
 
   messageList = res.list;

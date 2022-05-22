@@ -66,7 +66,7 @@ const CourseOverview = () => {
 
   const handleFabClick = () =>
     Taro.showActionSheet({
-      itemList: ["开始上课", "创建考勤", "上传课件", "发布公告"]
+      itemList: ["开始上课", "创建考勤", "上传课件"]
     })
       .then(({ tapIndex }) => {
         Taro.navigateTo({
