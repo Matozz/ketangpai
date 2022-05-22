@@ -39,7 +39,7 @@ const CourseDetail = () => {
         console.log(tapIndex);
         if (tapIndex === 0) {
           Taro.navigateTo({
-            url: `/pages/comment/comment?event_type=course&event_id=${params._id}`
+            url: `/pages/comment/comment?event_type=detail&event_id=${params._id}&cid=${params.cid}`
           });
         }
       })
@@ -47,8 +47,8 @@ const CourseDetail = () => {
   };
 
   useReady(() => {
-    let { _id, viewType } = getCurrentInstance().router.params;
-    setParams({ _id, viewType });
+    let { _id, viewType, cid } = getCurrentInstance().router.params;
+    setParams({ _id, viewType, cid });
 
     loadDetail(_id);
   });
@@ -74,7 +74,7 @@ const CourseDetail = () => {
         </View>
       )}
 
-      <CommentList event_type="course" event_id={params._id} />
+      <CommentList event_type="detail" event_id={params._id} />
 
       <View className="fab_btn">
         <AtFab onClick={handleFabClick}>

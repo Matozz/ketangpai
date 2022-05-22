@@ -102,7 +102,7 @@ const CreateEvent = () => {
           });
           const timer = setTimeout(() => {
             Taro.redirectTo({
-              url: `/pages/course_detail/course_detail?_id=${detail_id}&viewType=1`
+              url: `/pages/course_detail/course_detail?cid=${cid}&_id=${detail_id}&viewType=1`
             });
             clearTimeout(timer);
           }, 1500);

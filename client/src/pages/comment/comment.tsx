@@ -10,10 +10,12 @@ const Comment = () => {
   const onSubmit = (event: BaseEventOrig<FormProps.onSubmitEventDetail>) => {
     Taro.showLoading({ title: "提交中" });
     createComment(
+      params.cid,
       params.event_id,
       params.event_type,
       getGlobalData("USERINFO")?.realName ??
         getGlobalData("USERINFO")?.nickName,
+      getGlobalData("USERINFO")?.type,
       event.detail.value as any
     )
       .then(() => {
@@ -34,8 +36,8 @@ const Comment = () => {
   );
 
   useReady(() => {
-    let { event_type, event_id } = getCurrentInstance().router.params;
-    setParams({ event_type, event_id });
+    let { event_type, event_id, cid } = getCurrentInstance().router.params;
+    setParams({ event_type, event_id, cid });
   });
 
   return (

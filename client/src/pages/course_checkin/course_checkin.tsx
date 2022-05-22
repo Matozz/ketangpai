@@ -226,7 +226,7 @@ const CourseCheckin = () => {
       .then(({ tapIndex }) => {
         if (tapIndex === 0) {
           Taro.navigateTo({
-            url: `/pages/comment/comment?event_type=checkin&event_id=${params._id}`
+            url: `/pages/comment/comment?event_type=checkin&event_id=${params._id}&cid=${params.cid}`
           });
         } else if (tapIndex === 1) {
           Taro.navigateTo({

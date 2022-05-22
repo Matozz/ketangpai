@@ -1,9 +1,11 @@
 import Taro from "@tarojs/taro";
 
 export const createComment = (
+  cid: string,
   event_id: string,
   type: "detail" | "file" | "checkin" | "notice",
   user: string,
+  user_type: 0 | 1,
   payload: {
     title: string;
     content?: string;
@@ -15,9 +17,11 @@ export const createComment = (
     db.collection("comments")
       .add({
         data: {
+          cid,
           event_id,
           type,
           user,
+          user_type,
           ...payload,
           createTime: db.serverDate()
         }

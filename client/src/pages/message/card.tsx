@@ -33,7 +33,6 @@ const EventCard = ({ item }) => {
   }>({});
 
   useEffect(() => {
-    console.log(finishTime);
     let countdown = countdownTime(finishTime);
 
     setCountdown(countdown.part);
