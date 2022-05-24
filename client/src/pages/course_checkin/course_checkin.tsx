@@ -376,7 +376,7 @@ const CourseCheckin = () => {
       success: ({ result }) => {
         Taro.showLoading({ title: "签到中" });
         let data = result.split("||");
-        if (data[0] === "matozz") {
+        if (data[0] === "xmut") {
           Taro.cloud
             .callFunction({
               name: "student_checkin",
@@ -684,7 +684,7 @@ const CourseCheckin = () => {
                         <View>
                           <Image
                             className="code_img"
-                            src={`https://api.qrserver.com/v1/create-qr-code/?data=matozz||${qrcode.data}||${qrcode.timestamp}`}
+                            src={`https://api.qrserver.com/v1/create-qr-code/?data=xmut||${qrcode.data}||${qrcode.timestamp}`}
                             onLoad={handleQRCodeLoad}
                             showMenuByLongpress
                           />
